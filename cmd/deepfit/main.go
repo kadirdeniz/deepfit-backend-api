@@ -7,11 +7,11 @@ import (
 )
 
 func main() {
-	fmt.Println("Deepfit Fit Application Started!")
-
-	// Start Server
-	fiber.Router()
+	fmt.Println("Deepfit Application Started!")
 
 	// Connect Database
 	mongodb.CreateConnection()
+
+	// Start Server
+	fiber.Router()
 }
