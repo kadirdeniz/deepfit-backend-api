@@ -7,10 +7,11 @@ var (
 )
 
 const (
-	REGISTER            = "/register"
-	LOGIN               = "/login"
-	VERIFY_PHONE_NUMBER = "/verify-phone-number"
-	INTERESTS           = "/interests"
-	PROFILE_PHOTO       = "/profile-photo"
-	COVER_PHOTO         = "/cover-photo"
+	REGISTER                 = "/register"
+	LOGIN                    = "/login"
+	VERIFY_PHONE_NUMBER      = "/verify-phone-number"
+	INTERESTS                = "/interests"
+	PROFILE_PHOTO            = "/profile-photo"
+	COVER_PHOTO              = "/cover-photo"
+	RESEND_VERIFICATION_CODE = "/resend-verification-code"
 )

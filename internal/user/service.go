@@ -13,11 +13,12 @@ type UserService struct {
 
 type IUserService interface {
 	Register(dto dto.RegisterRequest) (*User, error)
+	Login(dto dto.LoginRequest) (*User, error)
 	VerifyPhoneNumber(dto dto.VerifyPhoneNumberRequest, userId primitive.ObjectID) (*User, error)
 	UpdateInterests(dto dto.UpdateInterestRequest, userId primitive.ObjectID) error
 	UpdateProfilePhoto(imageName string, userId primitive.ObjectID) error
 	UpdateCoverPhoto(imageName string, userId primitive.ObjectID) error
-	Login(dto dto.LoginRequest) (*User, error)
+	ResendVerificationCode(id primitive.ObjectID) (*User, error)
 }
 
 func NewUserService() IUserService {
@@ -122,6 +123,22 @@ func (userService *UserService) Login(dto dto.LoginRequest) (*User, error) {
 
 	if !user.ComparePasswords(dto.Password) {
 		return nil, errors.New(constants.INVALID_PASSWORD)
+	}
+
+	return user, nil
+}
+
+func (userService *UserService) ResendVerificationCode(id primitive.ObjectID) (*User, error) {
+
+	user, getUserErr := userService.repository.GetUserById(id)
+	if getUserErr != nil {
+		return nil, getUserErr
+	}
+
+	user.Phone.SetVerificationCode()
+
+	if upsertError := userService.repository.Upsert(user); upsertError != nil {
+		return nil, upsertError
 	}
 
 	return user, nil

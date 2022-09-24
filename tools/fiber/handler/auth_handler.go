@@ -134,3 +134,23 @@ func VerifyPhoneNumberHandler(c *fiber.Ctx) error {
 		},
 	})
 }
+
+func ResendVerificationCodeHandler(c *fiber.Ctx) error {
+
+	userId := c.Locals("userId").(primitive.ObjectID)
+
+	_, resendError := user.NewUserService().ResendVerificationCode(userId)
+	if resendError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: resendError.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(dto.General{
+		Status:  true,
+		Message: constants.VERIFICATION_CODE_RESENT,
+		Data:    nil,
+	})
+}
