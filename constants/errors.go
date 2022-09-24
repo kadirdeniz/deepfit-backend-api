@@ -12,4 +12,5 @@ const (
 	NICKNAME_ALREADY_EXISTS     = "nickname_already_exists"
 	INVALID_VERIFICATION_CODE   = "invalid_verification_code"
 	INVALID_PASSWORD            = "invalid_password"
+	PASSWORDS_NOT_MATCH         = "passwords_not_match"
 )

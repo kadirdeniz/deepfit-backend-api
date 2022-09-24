@@ -21,8 +21,8 @@ func Router() {
 	api.Put(constants.INTERESTS, middleware.TokenCantGo, handler.UpdateInterestsHandler)
 	api.Put(constants.PROFILE_PHOTO, middleware.TokenCanGo, handler.UpdateProfilePhotoHandler)
 	api.Put(constants.COVER_PHOTO, middleware.TokenCanGo, handler.UpdateCoverPhotoHandler)
-
-	api.Put(constants.RESEND_VERIFICATION_CODE, middleware.TokenCantGo, handler.ResendVerificationCodeHandler)
+	api.Put(constants.VERIFICATION_CODE, middleware.TokenCantGo, handler.ResendVerificationCodeHandler)
+	api.Put(constants.PASSWORD, middleware.TokenCantGo, handler.ChangePasswordHandler)
 
 	log.Fatal(app.Listen(":" + configs.PORT))
 }

@@ -154,3 +154,46 @@ func ResendVerificationCodeHandler(c *fiber.Ctx) error {
 		Data:    nil,
 	})
 }
+
+func ChangePasswordHandler(c *fiber.Ctx) error {
+
+	changePasswordDto := new(dto.ChangePasswordRequest)
+
+	encodeError := json.Unmarshal(c.Body(), &changePasswordDto)
+	if encodeError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: constants.BAD_REQUEST,
+			Data:    nil,
+		})
+	}
+
+	validationError := changePasswordDto.Validate()
+	if validationError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: constants.VALIDATION_ERROR,
+			Data:    validationError,
+		})
+	}
+
+	userId := c.Locals("userId").(primitive.ObjectID)
+
+	userObj, changePasswordError := user.NewUserService().ChangePassword(*changePasswordDto, userId)
+	if changePasswordError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: changePasswordError.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(dto.General{
+		Status:  true,
+		Message: constants.PASSWORD_CHANGE_SUCCESS,
+		Data: dto.RegisterResponse{
+			Id:    userObj.ID,
+			Token: jwt.New().SetUserId(userObj.ID).CreateToken().GetToken(),
+		},
+	})
+}

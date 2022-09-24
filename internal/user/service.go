@@ -19,6 +19,7 @@ type IUserService interface {
 	UpdateProfilePhoto(imageName string, userId primitive.ObjectID) error
 	UpdateCoverPhoto(imageName string, userId primitive.ObjectID) error
 	ResendVerificationCode(id primitive.ObjectID) (*User, error)
+	ChangePassword(dto dto.ChangePasswordRequest, userId primitive.ObjectID) (*User, error)
 }
 
 func NewUserService() IUserService {
@@ -136,6 +137,26 @@ func (userService *UserService) ResendVerificationCode(id primitive.ObjectID) (*
 	}
 
 	user.Phone.SetVerificationCode()
+
+	if upsertError := userService.repository.Upsert(user); upsertError != nil {
+		return nil, upsertError
+	}
+
+	return user, nil
+}
+
+func (userService *UserService) ChangePassword(dto dto.ChangePasswordRequest, userId primitive.ObjectID) (*User, error) {
+
+	user, getUserErr := userService.repository.GetUserById(userId)
+	if getUserErr != nil {
+		return nil, getUserErr
+	}
+
+	if !user.ComparePasswords(dto.OldPassword) {
+		return nil, errors.New(constants.INVALID_PASSWORD)
+	}
+
+	user.HashPassword(dto.NewPassword)
 
 	if upsertError := userService.repository.Upsert(user); upsertError != nil {
 		return nil, upsertError

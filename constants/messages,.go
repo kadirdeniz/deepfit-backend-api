@@ -14,4 +14,5 @@ const (
 	UPDATE_COVER_PHOTO_SUCCESS   = "update_cover_photo_success"
 	LOGIN_SUCCESS                = "login_success"
 	VERIFICATION_CODE_RESENT     = "verification_code_resent"
+	PASSWORD_CHANGE_SUCCESS      = "password_change_success"
 )
