@@ -47,3 +47,57 @@ func UpdateInterestsHandler(c *fiber.Ctx) error {
 	})
 
 }
+
+func UpdateProfilePhotoHandler(c *fiber.Ctx) error {
+	userId := c.Locals("userId").(primitive.ObjectID)
+
+	photo, photoError := c.FormFile("profile_photo")
+	if photoError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: constants.BAD_REQUEST,
+			Data:    nil,
+		})
+	}
+
+	if updateProfilePhotoError := user.NewUserService().UpdateProfilePhoto(photo.Filename, userId); updateProfilePhotoError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: updateProfilePhotoError.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(dto.General{
+		Status:  true,
+		Message: constants.UPDATE_PROFILE_PHOTO_SUCCESS,
+		Data:    nil,
+	})
+}
+
+func UpdateCoverPhotoHandler(c *fiber.Ctx) error {
+	userId := c.Locals("userId").(primitive.ObjectID)
+
+	photo, photoError := c.FormFile("cover_photo")
+	if photoError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: constants.BAD_REQUEST,
+			Data:    nil,
+		})
+	}
+
+	if updateCoverPhotoError := user.NewUserService().UpdateCoverPhoto(photo.Filename, userId); updateCoverPhotoError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: updateCoverPhotoError.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(dto.General{
+		Status:  true,
+		Message: constants.UPDATE_COVER_PHOTO_SUCCESS,
+		Data:    nil,
+	})
+}

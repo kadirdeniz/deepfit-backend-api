@@ -15,6 +15,8 @@ type IUserService interface {
 	Register(dto dto.RegisterRequest) (*User, error)
 	VerifyPhoneNumber(dto dto.VerifyPhoneNumberRequest, userId primitive.ObjectID) (*User, error)
 	UpdateInterests(dto dto.UpdateInterestRequest, userId primitive.ObjectID) error
+	UpdateProfilePhoto(imageName string, userId primitive.ObjectID) error
+	UpdateCoverPhoto(imageName string, userId primitive.ObjectID) error
 }
 
 func NewUserService() IUserService {
@@ -70,6 +72,38 @@ func (userService *UserService) UpdateInterests(dto dto.UpdateInterestRequest, u
 	}
 
 	user.Interests = dto.Interests
+
+	if upsertError := userService.repository.Upsert(user); upsertError != nil {
+		return upsertError
+	}
+
+	return nil
+}
+
+func (userService *UserService) UpdateProfilePhoto(imageName string, userId primitive.ObjectID) error {
+
+	user, getUserErr := userService.repository.GetUserById(userId)
+	if getUserErr != nil {
+		return getUserErr
+	}
+
+	user.SetProfilePhoto(imageName)
+
+	if upsertError := userService.repository.Upsert(user); upsertError != nil {
+		return upsertError
+	}
+
+	return nil
+}
+
+func (userService *UserService) UpdateCoverPhoto(imageName string, userId primitive.ObjectID) error {
+
+	user, getUserErr := userService.repository.GetUserById(userId)
+	if getUserErr != nil {
+		return getUserErr
+	}
+
+	user.SetCoverPhoto(imageName)
 
 	if upsertError := userService.repository.Upsert(user); upsertError != nil {
 		return upsertError

@@ -1,6 +1,7 @@
 package pkg
 
 import (
+	"deepfit/constants"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"math/rand"
 	"regexp"
@@ -25,6 +26,9 @@ func LowerCaseReplaceEmpty(input string) string {
 }
 
 func HashImageName(imageName string) string {
+	if imageName == constants.DEFAULT_IMAGE {
+		return imageName
+	}
 	return primitive.NewObjectID().Hex() + "-" + strings.ToLower(strings.Join(strings.Split(imageName, " "), "_"))
 }
 

@@ -10,4 +10,6 @@ const (
 	REGISTER            = "/register"
 	VERIFY_PHONE_NUMBER = "/verify-phone-number"
 	INTERESTS           = "/interests"
+	PROFILE_PHOTO       = "/profile-photo"
+	COVER_PHOTO         = "/cover-photo"
 )
