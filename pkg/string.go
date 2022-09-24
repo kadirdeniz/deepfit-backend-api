@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"math/rand"
 	"regexp"
 	"strings"
 	"unicode"
@@ -25,4 +26,10 @@ func LowerCaseReplaceEmpty(input string) string {
 
 func HashImageName(imageName string) string {
 	return primitive.NewObjectID().Hex() + "-" + strings.ToLower(strings.Join(strings.Split(imageName, " "), "_"))
+}
+
+func RandomCode() int {
+	rangeLower := 10000
+	rangeUpper := 99999
+	return rangeLower + rand.Intn(rangeUpper-rangeLower+1)
 }

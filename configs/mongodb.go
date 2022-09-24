@@ -19,3 +19,7 @@ var (
 		MONGO_INITDB_PORT,
 	)
 )
+
+const (
+	USER_COLLECTION = "users"
+)

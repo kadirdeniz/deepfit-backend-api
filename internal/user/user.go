@@ -13,8 +13,8 @@ type User struct {
 	Name         string                    `bson:"name" json:"name"`
 	Surname      string                    `bson:"surname" json:"surname"`
 	Nickname     string                    `bson:"nickname" json:"nickname"`
-	Phone        string                    `bson:"phone" json:"phone"`
-	Email        string                    `bson:"email,omitempty" json:"email"`
+	Phone        Phone                     `bson:"phone" json:"phone"`
+	Email        Email                     `bson:"email,omitempty" json:"email"`
 	Password     string                    `bson:"password" json:"password"`
 	Measurements []measurement.Measurement `bson:"measurements,omitempty" json:"measurements"`
 	ProfilePhoto pkg.Image                 `bson:"profile_photo" json:"profile_photo"`
@@ -28,7 +28,7 @@ func NewUser(name, surname, nickname, phone, password string) *User {
 		SetName(name).
 		SetSurname(surname).
 		SetNickname(nickname).
-		SetPhone(phone).
+		SetPhoneObj(phone).
 		HashPassword(password).
 		SetProfilePhoto("").
 		SetCoverPhoto("")
@@ -63,14 +63,24 @@ func (user *User) SetNickname(nickname string) *User {
 }
 
 func (user *User) SetPhone(phone string) *User {
-	user.Phone = phone
+	user.Phone.Phone = phone
 	user.Date.UpdateTime()
 	return user
 }
 
+func (user *User) SetPhoneObj(phone string) *User {
+	user.Phone = NewPhone(phone)
+	return user
+}
+
 func (user *User) SetEmail(email string) *User {
-	user.Email = pkg.LowerCaseReplaceEmpty(email)
+	user.Email.Email = pkg.LowerCaseReplaceEmpty(email)
 	user.Date.UpdateTime()
+	return user
+}
+
+func (user *User) SetEmailObj(email string) *User {
+	user.Email = NewEmail(email)
 	return user
 }
 
