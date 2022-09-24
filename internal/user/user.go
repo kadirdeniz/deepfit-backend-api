@@ -17,6 +17,7 @@ type User struct {
 	Email        Email                     `bson:"email,omitempty" json:"email"`
 	Password     string                    `bson:"password" json:"password"`
 	Measurements []measurement.Measurement `bson:"measurements,omitempty" json:"measurements"`
+	Interests    []string                  `bson:"interests,omitempty" json:"interests"`
 	ProfilePhoto pkg.Image                 `bson:"profile_photo" json:"profile_photo"`
 	CoverPhoto   pkg.Image                 `bson:"cover_photo" json:"cover_photo"`
 	Date         pkg.Date                  `bson:"date" json:"date"`

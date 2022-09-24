@@ -9,4 +9,5 @@ const (
 	BAD_REQUEST                = "bad_request"
 	REGISTER_SUCCESS           = "register_success"
 	PHONE_VERIFICATION_SUCCESS = "phone_verification_success"
+	UPDATE_INTERESTS_SUCCESS   = "update_interests_success"
 )

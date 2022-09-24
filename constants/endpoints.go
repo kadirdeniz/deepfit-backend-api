@@ -9,4 +9,5 @@ var (
 const (
 	REGISTER            = "/register"
 	VERIFY_PHONE_NUMBER = "/verify-phone-number"
+	INTERESTS           = "/interests"
 )

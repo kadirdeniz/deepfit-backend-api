@@ -14,6 +14,7 @@ type UserService struct {
 type IUserService interface {
 	Register(dto dto.RegisterRequest) (*User, error)
 	VerifyPhoneNumber(dto dto.VerifyPhoneNumberRequest, userId primitive.ObjectID) (*User, error)
+	UpdateInterests(dto dto.UpdateInterestRequest, userId primitive.ObjectID) error
 }
 
 func NewUserService() IUserService {
@@ -59,4 +60,20 @@ func (userService *UserService) VerifyPhoneNumber(dto dto.VerifyPhoneNumberReque
 	}
 
 	return user, nil
+}
+
+func (userService *UserService) UpdateInterests(dto dto.UpdateInterestRequest, userId primitive.ObjectID) error {
+
+	user, getUserErr := userService.repository.GetUserById(userId)
+	if getUserErr != nil {
+		return getUserErr
+	}
+
+	user.Interests = dto.Interests
+
+	if upsertError := userService.repository.Upsert(user); upsertError != nil {
+		return upsertError
+	}
+
+	return nil
 }

@@ -17,6 +17,7 @@ func Router() {
 
 	api.Post(constants.REGISTER, middleware.TokenCantGo, handler.RegisterHandler)
 	api.Post(constants.VERIFY_PHONE_NUMBER, middleware.TokenCanGo, handler.VerifyPhoneNumberHandler)
+	api.Put(constants.INTERESTS, middleware.TokenCantGo, handler.UpdateInterestsHandler)
 
 	log.Fatal(app.Listen(":" + configs.PORT))
 }
