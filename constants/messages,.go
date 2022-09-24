@@ -12,4 +12,5 @@ const (
 	UPDATE_INTERESTS_SUCCESS     = "update_interests_success"
 	UPDATE_PROFILE_PHOTO_SUCCESS = "update_profile_photo_success"
 	UPDATE_COVER_PHOTO_SUCCESS   = "update_cover_photo_success"
+	LOGIN_SUCCESS                = "login_success"
 )

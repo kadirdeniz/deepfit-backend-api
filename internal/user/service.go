@@ -17,6 +17,7 @@ type IUserService interface {
 	UpdateInterests(dto dto.UpdateInterestRequest, userId primitive.ObjectID) error
 	UpdateProfilePhoto(imageName string, userId primitive.ObjectID) error
 	UpdateCoverPhoto(imageName string, userId primitive.ObjectID) error
+	Login(dto dto.LoginRequest) (*User, error)
 }
 
 func NewUserService() IUserService {
@@ -27,15 +28,15 @@ func NewUserService() IUserService {
 
 func (userService *UserService) Register(dto dto.RegisterRequest) (*User, error) {
 
-	user := NewUser(dto.Name, dto.Surname, dto.Nickname, dto.Phone, dto.Password)
-
-	if !userService.repository.IsPhoneNumberExists(user) {
+	if !userService.repository.IsPhoneNumberExists(dto.Phone) {
 		return nil, errors.New(constants.PHONE_NUMBER_ALREADY_EXISTS)
 	}
 
-	if !userService.repository.IsNicknameExists(user) {
+	if !userService.repository.IsNicknameExists(dto.Nickname) {
 		return nil, errors.New(constants.NICKNAME_ALREADY_EXISTS)
 	}
+
+	user := NewUser(dto.Name, dto.Surname, dto.Nickname, dto.Phone, dto.Password)
 
 	if upsertError := userService.repository.Upsert(user); upsertError != nil {
 		return nil, upsertError
@@ -110,4 +111,18 @@ func (userService *UserService) UpdateCoverPhoto(imageName string, userId primit
 	}
 
 	return nil
+}
+
+func (userService *UserService) Login(dto dto.LoginRequest) (*User, error) {
+
+	user, getUserErr := userService.repository.GetUserByPhone(dto.Phone)
+	if getUserErr != nil {
+		return nil, getUserErr
+	}
+
+	if !user.ComparePasswords(dto.Password) {
+		return nil, errors.New(constants.INVALID_PASSWORD)
+	}
+
+	return user, nil
 }

@@ -8,6 +8,7 @@ var (
 
 const (
 	REGISTER            = "/register"
+	LOGIN               = "/login"
 	VERIFY_PHONE_NUMBER = "/verify-phone-number"
 	INTERESTS           = "/interests"
 	PROFILE_PHOTO       = "/profile-photo"

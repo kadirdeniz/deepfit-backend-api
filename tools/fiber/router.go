@@ -16,6 +16,7 @@ func Router() {
 	api := app.Group(constants.API_PREFIX)
 
 	api.Post(constants.REGISTER, middleware.TokenCantGo, handler.RegisterHandler)
+	api.Post(constants.LOGIN, middleware.TokenCantGo, handler.LoginHandler)
 	api.Post(constants.VERIFY_PHONE_NUMBER, middleware.TokenCanGo, handler.VerifyPhoneNumberHandler)
 	api.Put(constants.INTERESTS, middleware.TokenCantGo, handler.UpdateInterestsHandler)
 	api.Put(constants.PROFILE_PHOTO, middleware.TokenCanGo, handler.UpdateProfilePhotoHandler)

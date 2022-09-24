@@ -26,6 +26,7 @@ func (request *RegisterRequest) Validate() error {
 		validation.Field(&request.Name, ozzo_validation.Name...),
 		validation.Field(&request.Surname, ozzo_validation.Name...),
 		validation.Field(&request.Nickname, ozzo_validation.Nickname...),
+		validation.Field(&request.Phone, ozzo_validation.Phone...),
 		validation.Field(&request.Password, ozzo_validation.Password...),
 		validation.Field(&request.RePassword, validation.In(request.Password).Error(constants.PASSWORD_DOESNT_MATCH)),
 	)

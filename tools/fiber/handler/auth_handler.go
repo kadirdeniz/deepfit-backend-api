@@ -51,6 +51,47 @@ func RegisterHandler(c *fiber.Ctx) error {
 	})
 }
 
+func LoginHandler(c *fiber.Ctx) error {
+
+	loginDto := new(dto.LoginRequest)
+
+	encodeError := json.Unmarshal(c.Body(), &loginDto)
+	if encodeError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: constants.BAD_REQUEST,
+			Data:    nil,
+		})
+	}
+
+	validationError := loginDto.Validate()
+	if validationError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: constants.VALIDATION_ERROR,
+			Data:    validationError,
+		})
+	}
+
+	userObj, loginError := user.NewUserService().Login(*loginDto)
+	if loginError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: loginError.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(dto.General{
+		Status:  true,
+		Message: constants.LOGIN_SUCCESS,
+		Data: dto.RegisterResponse{
+			Id:    userObj.ID,
+			Token: jwt.New().SetUserId(userObj.ID).CreateToken().GetToken(),
+		},
+	})
+}
+
 func VerifyPhoneNumberHandler(c *fiber.Ctx) error {
 
 	verifyDto := new(dto.VerifyPhoneNumberRequest)

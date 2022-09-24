@@ -17,9 +17,10 @@ type UserRepository struct{}
 type IUserRepository interface {
 	Upsert(user *User) error
 	GetUserById(userId primitive.ObjectID) (*User, error)
-	IsPhoneNumberExists(user *User) bool
-	IsNicknameExists(user *User) bool
-	IsEmailExists(user *User) bool
+	GetUserByPhone(phone string) (*User, error)
+	IsPhoneNumberExists(phone string) bool
+	IsNicknameExists(nickname string) bool
+	IsEmailExists(email string) bool
 }
 
 func NewRepository() IUserRepository {
@@ -61,8 +62,8 @@ func (repository *UserRepository) GetUserById(userId primitive.ObjectID) (*User,
 	return &userObj, nil
 }
 
-func (repository *UserRepository) IsPhoneNumberExists(user *User) bool {
-	filter := bson.M{"user.phone.phone": user.Nickname}
+func (repository *UserRepository) IsPhoneNumberExists(phone string) bool {
+	filter := bson.M{"user.phone.phone": phone}
 
 	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
 
@@ -75,8 +76,8 @@ func (repository *UserRepository) IsPhoneNumberExists(user *User) bool {
 	return count > 0
 }
 
-func (repository *UserRepository) IsNicknameExists(user *User) bool {
-	filter := bson.M{"user.nickname": user.Nickname}
+func (repository *UserRepository) IsNicknameExists(nickname string) bool {
+	filter := bson.M{"user.nickname": nickname}
 
 	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
 
@@ -89,8 +90,8 @@ func (repository *UserRepository) IsNicknameExists(user *User) bool {
 	return count > 0
 }
 
-func (repository *UserRepository) IsEmailExists(user *User) bool {
-	filter := bson.M{"user.email.email": user.Nickname}
+func (repository *UserRepository) IsEmailExists(email string) bool {
+	filter := bson.M{"user.email.email": email}
 
 	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
 
@@ -101,4 +102,26 @@ func (repository *UserRepository) IsEmailExists(user *User) bool {
 	}
 
 	return count > 0
+}
+
+func (repository *UserRepository) GetUserByPhone(phone string) (*User, error) {
+	var userObj User
+	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
+
+	response := userCollection.FindOne(mongodb.CTX, bson.M{"user.phone.phone": phone})
+
+	if response.Err() != nil {
+		if response.Err() == mongo.ErrNoDocuments {
+			return nil, errors.New(constants.USER_NOT_FOUND)
+		}
+		log.Fatal(response.Err())
+		return nil, errors.New(constants.DATABASE_OPERATION_ERROR)
+	}
+
+	if err := response.Decode(&userObj); err != nil {
+		log.Fatal(err)
+		return nil, errors.New(constants.DATABASE_OPERATION_ERROR)
+	}
+
+	return &userObj, nil
 }

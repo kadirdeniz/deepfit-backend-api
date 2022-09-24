@@ -11,4 +11,5 @@ const (
 	PHONE_NUMBER_ALREADY_EXISTS = "phone_number_already_exists"
 	NICKNAME_ALREADY_EXISTS     = "nickname_already_exists"
 	INVALID_VERIFICATION_CODE   = "invalid_verification_code"
+	INVALID_PASSWORD            = "invalid_password"
 )
