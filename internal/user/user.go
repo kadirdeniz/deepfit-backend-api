@@ -2,22 +2,24 @@ package user
 
 import (
 	"deepfit/constants"
+	"deepfit/internal/user/measurement"
 	"deepfit/pkg"
 	"deepfit/tools/bcrypt"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type User struct {
-	ID           primitive.ObjectID `bson:"_id" json:"_id"`
-	Name         string             `bson:"name" json:"name"`
-	Surname      string             `bson:"surname" json:"surname"`
-	Nickname     string             `bson:"nickname" json:"nickname"`
-	Phone        string             `bson:"phone" json:"phone"`
-	Email        string             `bson:"email,omitempty" json:"email"`
-	Password     string             `bson:"password" json:"password"`
-	ProfilePhoto pkg.Image          `bson:"profile_photo" json:"profile_photo"`
-	CoverPhoto   pkg.Image          `bson:"cover_photo" json:"cover_photo"`
-	Date         pkg.Date           `bson:"date" json:"date"`
+	ID           primitive.ObjectID        `bson:"_id" json:"_id"`
+	Name         string                    `bson:"name" json:"name"`
+	Surname      string                    `bson:"surname" json:"surname"`
+	Nickname     string                    `bson:"nickname" json:"nickname"`
+	Phone        string                    `bson:"phone" json:"phone"`
+	Email        string                    `bson:"email,omitempty" json:"email"`
+	Password     string                    `bson:"password" json:"password"`
+	Measurements []measurement.Measurement `bson:"measurements,omitempty" json:"measurements"`
+	ProfilePhoto pkg.Image                 `bson:"profile_photo" json:"profile_photo"`
+	CoverPhoto   pkg.Image                 `bson:"cover_photo" json:"cover_photo"`
+	Date         pkg.Date                  `bson:"date" json:"date"`
 }
 
 func NewUser(name, surname, nickname, phone, password string) *User {
