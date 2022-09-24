@@ -4,6 +4,7 @@ import (
 	"deepfit/constants"
 	"deepfit/pkg/dto"
 	"errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type UserService struct {
@@ -12,6 +13,7 @@ type UserService struct {
 
 type IUserService interface {
 	Register(dto dto.RegisterRequest) (*User, error)
+	VerifyPhoneNumber(dto dto.VerifyPhoneNumberRequest, userId primitive.ObjectID) (*User, error)
 }
 
 func NewUserService() IUserService {
@@ -31,6 +33,26 @@ func (userService *UserService) Register(dto dto.RegisterRequest) (*User, error)
 	if !userService.repository.IsNicknameExists(user) {
 		return nil, errors.New(constants.NICKNAME_ALREADY_EXISTS)
 	}
+
+	if upsertError := userService.repository.Upsert(user); upsertError != nil {
+		return nil, upsertError
+	}
+
+	return user, nil
+}
+
+func (userService *UserService) VerifyPhoneNumber(dto dto.VerifyPhoneNumberRequest, userId primitive.ObjectID) (*User, error) {
+
+	user, getUserErr := userService.repository.GetUserById(userId)
+	if getUserErr != nil {
+		return nil, getUserErr
+	}
+
+	if user.Phone.CheckVerificationCode(dto.VerificationCode) {
+		return nil, errors.New(constants.INVALID_VERIFICATION_CODE)
+	}
+
+	user.Phone.SetVerify()
 
 	if upsertError := userService.repository.Upsert(user); upsertError != nil {
 		return nil, upsertError

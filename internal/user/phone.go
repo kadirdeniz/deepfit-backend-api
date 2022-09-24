@@ -21,6 +21,10 @@ func (phone *Phone) SetVerify() *Phone {
 	return phone
 }
 
+func (phone *Phone) CheckVerificationCode(verificationCode int) bool {
+	return phone.VerificationCode == verificationCode
+}
+
 func (phone *Phone) SetVerificationCode() *Phone {
 	phone.VerificationCode = pkg.RandomCode()
 	return phone

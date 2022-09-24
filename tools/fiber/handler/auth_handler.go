@@ -7,6 +7,7 @@ import (
 	"deepfit/tools/jwt"
 	"encoding/json"
 	"github.com/gofiber/fiber/v2"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 func RegisterHandler(c *fiber.Ctx) error {
@@ -52,7 +53,7 @@ func RegisterHandler(c *fiber.Ctx) error {
 
 func VerifyPhoneNumberHandler(c *fiber.Ctx) error {
 
-	verifyDto := new(dto.VerifyRequest)
+	verifyDto := new(dto.VerifyPhoneNumberRequest)
 
 	encodeError := json.Unmarshal(c.Body(), &verifyDto)
 	if encodeError != nil {
@@ -72,7 +73,9 @@ func VerifyPhoneNumberHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj, verifyError := user.NewUserService().Verify(*verifyDto)
+	userId := c.Locals("userId").(primitive.ObjectID)
+
+	userObj, verifyError := user.NewUserService().VerifyPhoneNumber(*verifyDto, userId)
 	if verifyError != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
 			Status:  false,
@@ -83,7 +86,7 @@ func VerifyPhoneNumberHandler(c *fiber.Ctx) error {
 
 	return c.Status(fiber.StatusOK).JSON(dto.General{
 		Status:  true,
-		Message: constants.VERIFY_SUCCESS,
+		Message: constants.PHONE_VERIFICATION_SUCCESS,
 		Data: dto.RegisterResponse{
 			Id:    userObj.ID,
 			Token: jwt.New().SetUserId(userObj.ID).CreateToken().GetToken(),

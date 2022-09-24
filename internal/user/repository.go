@@ -6,6 +6,7 @@ import (
 	"deepfit/tools/mongodb"
 	"errors"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -15,7 +16,7 @@ type UserRepository struct{}
 
 type IUserRepository interface {
 	Upsert(user *User) error
-	GetUserById(user *User) (User, error)
+	GetUserById(userId primitive.ObjectID) (*User, error)
 	IsPhoneNumberExists(user *User) bool
 	IsNicknameExists(user *User) bool
 	IsEmailExists(user *User) bool
@@ -37,27 +38,27 @@ func (repository *UserRepository) Upsert(user *User) error {
 	return nil
 }
 
-func (repository *UserRepository) GetUserById(user *User) (User, error) {
+func (repository *UserRepository) GetUserById(userId primitive.ObjectID) (*User, error) {
 
 	var userObj User
 	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
 
-	response := userCollection.FindOne(mongodb.CTX, bson.M{"_id": user.ID})
+	response := userCollection.FindOne(mongodb.CTX, bson.M{"_id": userId})
 
 	if response.Err() != nil {
 		if response.Err() == mongo.ErrNoDocuments {
-			return userObj, errors.New(constants.USER_NOT_FOUND)
+			return nil, errors.New(constants.USER_NOT_FOUND)
 		}
 		log.Fatal(response.Err())
-		return userObj, errors.New(constants.DATABASE_OPERATION_ERROR)
+		return nil, errors.New(constants.DATABASE_OPERATION_ERROR)
 	}
 
 	if err := response.Decode(&userObj); err != nil {
 		log.Fatal(err)
-		return userObj, errors.New(constants.DATABASE_OPERATION_ERROR)
+		return nil, errors.New(constants.DATABASE_OPERATION_ERROR)
 	}
 
-	return userObj, nil
+	return &userObj, nil
 }
 
 func (repository *UserRepository) IsPhoneNumberExists(user *User) bool {
