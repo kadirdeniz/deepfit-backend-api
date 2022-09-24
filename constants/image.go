@@ -1,7 +1,13 @@
 package constants
 
-const THUMBNAIL = "thumbnail/"
-const ORIGINAL = "original/"
-const LARGE = "large/"
+const (
+	THUMBNAIL = "thumbnail/"
+	ORIGINAL  = "original/"
+	LARGE     = "large/"
 
-const DEFAULT_PROFILE_PHOTO = "default_profile_photo.png"
+	DEFAULT_IMAGE = "default_image.png"
+
+	USER_PATH          = "user/"
+	PROFILE_PHOTO_PATH = USER_PATH + "profile_photo/"
+	COVER_PHOTO_PATH   = USER_PATH + "cover_photo/"
+)
