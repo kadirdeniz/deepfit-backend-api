@@ -106,3 +106,8 @@ func (user *User) SetCoverPhoto(imageName string) *User {
 	user.Date.UpdateTime()
 	return user
 }
+
+func (user *User) SetMeasurements(measurements []measurement.Measurement) *User {
+	user.Measurements = measurements
+	return user
+}

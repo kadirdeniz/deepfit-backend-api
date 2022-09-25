@@ -2,7 +2,6 @@ package measurement
 
 import (
 	"deepfit/constants"
-	"deepfit/internal/user"
 	"deepfit/pkg"
 	"deepfit/pkg/dto"
 	"github.com/thoas/go-funk"
@@ -12,31 +11,30 @@ import (
 type MeasurementService struct{}
 
 type IMeasurementService interface {
-	Create(dto dto.MeasurementRequest, user *user.User) *user.User
-	Update(dto dto.MeasurementRequest, user *user.User) *user.User
-	Delete(user *user.User, measurementId primitive.ObjectID) *user.User
-	AddImage(user *user.User, measurementId primitive.ObjectID, imageName string) *user.User
-	DeleteImage(user *user.User, measurementId, imageId primitive.ObjectID) *user.User
-	UpdateIsPublic(user *user.User, measurementId primitive.ObjectID) *user.User
+	Create(measurements []Measurement, dto dto.MeasurementRequest) []Measurement
+	Update(measurements []Measurement, dto dto.MeasurementRequest) []Measurement
+	Delete(measurements []Measurement, measurementId primitive.ObjectID) []Measurement
+	AddImage(measurements []Measurement, measurementId primitive.ObjectID, imageName string) []Measurement
+	DeleteImage(measurements []Measurement, measurementId, imageId primitive.ObjectID) []Measurement
+	UpdateIsPublic(measurements []Measurement, measurementId primitive.ObjectID) []Measurement
 }
 
 func NewMeasurementService() IMeasurementService {
 	return &MeasurementService{}
 }
 
-func (measurementService *MeasurementService) Create(dto dto.MeasurementRequest, user *user.User) *user.User {
+func (measurementService *MeasurementService) Create(measurements []Measurement, dto dto.MeasurementRequest) []Measurement {
 
 	measurement := NewMeasurement(dto)
 
-	user.Measurements = append(user.Measurements, *measurement)
-	user.Date.UpdateTime()
+	measurements = append(measurements, *measurement)
 
-	return user
+	return measurements
 }
 
-func (measurementService *MeasurementService) Update(dto dto.MeasurementRequest, user *user.User) *user.User {
+func (measurementService *MeasurementService) Update(measurements []Measurement, dto dto.MeasurementRequest) []Measurement {
 
-	measurement := funk.Find(user.Measurements, func(measurement Measurement) bool {
+	measurement := funk.Find(measurements, func(measurement Measurement) bool {
 		return measurement.Id == dto.Id
 	}).(*Measurement)
 
@@ -55,14 +53,13 @@ func (measurementService *MeasurementService) Update(dto dto.MeasurementRequest,
 		SetWeight(dto.Weight)
 
 	measurement.Date.UpdateTime()
-	user.Date.UpdateTime()
 
-	return user
+	return measurements
 }
 
-func (measurementService *MeasurementService) Delete(user *user.User, measurementId primitive.ObjectID) *user.User {
+func (measurementService *MeasurementService) Delete(measurements []Measurement, measurementId primitive.ObjectID) []Measurement {
 
-	measurement := funk.Find(user.Measurements, func(measurement Measurement) bool {
+	measurement := funk.Find(measurements, func(measurement Measurement) bool {
 		return measurement.Id == measurementId
 	}).(*Measurement)
 
@@ -71,14 +68,13 @@ func (measurementService *MeasurementService) Delete(user *user.User, measuremen
 	}
 
 	measurement.Date.DeleteTime()
-	user.Date.UpdateTime()
 
-	return user
+	return measurements
 }
 
-func (measurementService *MeasurementService) AddImage(user *user.User, measurementId primitive.ObjectID, imageName string) *user.User {
+func (measurementService *MeasurementService) AddImage(measurements []Measurement, measurementId primitive.ObjectID, imageName string) []Measurement {
 
-	measurement := funk.Find(user.Measurements, func(measurement Measurement) bool {
+	measurement := funk.Find(measurements, func(measurement Measurement) bool {
 		return measurement.Id == measurementId
 	}).(*Measurement)
 
@@ -92,15 +88,13 @@ func (measurementService *MeasurementService) AddImage(user *user.User, measurem
 
 	measurement.Images = append(measurement.Images, pkg.NewImage(imageName, constants.MEASUREMENT_IMAGE_PATH))
 	measurement.Date.UpdateTime()
-	user.Date.UpdateTime()
 
-	return user
-
+	return measurements
 }
 
-func (measurementService *MeasurementService) DeleteImage(user *user.User, measurementId, imageId primitive.ObjectID) *user.User {
+func (measurementService *MeasurementService) DeleteImage(measurements []Measurement, measurementId, imageId primitive.ObjectID) []Measurement {
 
-	measurement := funk.Find(user.Measurements, func(measurement Measurement) bool {
+	measurement := funk.Find(measurements, func(measurement Measurement) bool {
 		return measurement.Id == measurementId
 	}).(*Measurement)
 
@@ -117,15 +111,13 @@ func (measurementService *MeasurementService) DeleteImage(user *user.User, measu
 	}
 
 	measurement.Date.UpdateTime()
-	user.Date.UpdateTime()
 
-	return user
-
+	return measurements
 }
 
-func (measurementService *MeasurementService) UpdateIsPublic(user *user.User, measurementId primitive.ObjectID) *user.User {
+func (measurementService *MeasurementService) UpdateIsPublic(measurements []Measurement, measurementId primitive.ObjectID) []Measurement {
 
-	measurement := funk.Find(user.Measurements, func(measurement Measurement) bool {
+	measurement := funk.Find(measurements, func(measurement Measurement) bool {
 		return measurement.Id == measurementId
 	}).(*Measurement)
 
@@ -135,8 +127,6 @@ func (measurementService *MeasurementService) UpdateIsPublic(user *user.User, me
 
 	measurement.SetIsPublic(!measurement.IsPublic)
 	measurement.Date.UpdateTime()
-	user.Date.UpdateTime()
 
-	return user
-
+	return measurements
 }

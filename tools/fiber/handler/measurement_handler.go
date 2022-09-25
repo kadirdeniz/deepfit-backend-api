@@ -44,7 +44,9 @@ func CreateMeasurementHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj = measurement.NewMeasurementService().Create(*measurementDto, userObj)
+	userObj.SetMeasurements(
+		measurement.NewMeasurementService().Create(userObj.Measurements, *measurementDto),
+	)
 
 	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
@@ -95,7 +97,9 @@ func UpdateMeasurementHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj = measurement.NewMeasurementService().Update(*measurementDto, userObj)
+	userObj.SetMeasurements(
+		measurement.NewMeasurementService().Update(userObj.Measurements, *measurementDto),
+	)
 
 	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
@@ -126,7 +130,9 @@ func DeleteMeasurementHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj = measurement.NewMeasurementService().Delete(userObj, measurementId)
+	userObj.SetMeasurements(
+		measurement.NewMeasurementService().Delete(userObj.Measurements, measurementId),
+	)
 
 	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
@@ -167,7 +173,9 @@ func AddImageToMeasurementHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj = measurement.NewMeasurementService().AddImage(userObj, measurementId, pkg.HashImageName(file.Filename))
+	userObj.SetMeasurements(
+		measurement.NewMeasurementService().AddImage(userObj.Measurements, measurementId, pkg.HashImageName(file.Filename)),
+	)
 
 	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
@@ -199,7 +207,9 @@ func DeleteImageToMeasurementHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj = measurement.NewMeasurementService().DeleteImage(userObj, measurementId, imageId)
+	userObj.SetMeasurements(
+		measurement.NewMeasurementService().DeleteImage(userObj.Measurements, measurementId, imageId),
+	)
 
 	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
@@ -230,7 +240,9 @@ func UpdateMeasurementIsPublicHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj = measurement.NewMeasurementService().UpdateIsPublic(userObj, measurementId)
+	userObj.SetMeasurements(
+		measurement.NewMeasurementService().UpdateIsPublic(userObj.Measurements, measurementId),
+	)
 
 	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
