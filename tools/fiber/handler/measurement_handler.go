@@ -215,3 +215,34 @@ func DeleteImageToMeasurementHandler(c *fiber.Ctx) error {
 		Data:    nil,
 	})
 }
+
+func UpdateMeasurementIsPublicHandler(c *fiber.Ctx) error {
+
+	userId := c.Locals("userId").(primitive.ObjectID)
+	measurementId, _ := primitive.ObjectIDFromHex(c.Params("measurement_id"))
+
+	userObj, getUserErr := user.NewRepository().GetUserById(userId)
+	if getUserErr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: getUserErr.Error(),
+			Data:    nil,
+		})
+	}
+
+	userObj = measurement.NewMeasurementService().UpdateIsPublic(userObj, measurementId)
+
+	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: upsertErr.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(dto.General{
+		Status:  true,
+		Message: constants.UPDATE_MEASUREMENT_IS_PUBLIC_SUCCESS,
+		Data:    nil,
+	})
+}

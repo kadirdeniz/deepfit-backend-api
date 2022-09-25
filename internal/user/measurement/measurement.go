@@ -16,6 +16,7 @@ type Measurement struct {
 	Hip      int                `bson:"hip,omitempty" json:"hip"`
 	Height   int                `bson:"height,omitempty" json:"height"`
 	Weight   int                `bson:"weight,omitempty" json:"weight"`
+	IsPublic bool               `bson:"isPublic,omitempty" json:"isPublic"`
 	Images   []pkg.Image        `bson:"images,omitempty" json:"images"`
 	Date     pkg.Date           `bson:"time" json:"time"`
 }
@@ -31,6 +32,7 @@ func NewMeasurement(dto dto.MeasurementRequest) *Measurement {
 		SetHip(dto.Hip).
 		SetHeight(dto.Height).
 		SetWeight(dto.Weight).
+		SetIsPublic(false).
 		SetDate()
 
 }
@@ -79,6 +81,12 @@ func (measurement *Measurement) SetWaist(waist int) *Measurement {
 
 func (measurement *Measurement) SetHip(hip int) *Measurement {
 	measurement.Hip = hip
+
+	return measurement
+}
+
+func (measurement *Measurement) SetIsPublic(isPublic bool) *Measurement {
+	measurement.IsPublic = isPublic
 
 	return measurement
 }

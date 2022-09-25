@@ -20,6 +20,7 @@ const (
 	MEASUREMENT_ID = "/:measurement_id"
 	IMAGE          = "/image"
 	IMAGE_ID       = "/:image_id"
+	IS_PUBLIC      = "/is-public"
 
 	EMPTY = "/"
 )

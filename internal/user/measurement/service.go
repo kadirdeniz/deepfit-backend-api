@@ -17,6 +17,7 @@ type IMeasurementService interface {
 	Delete(user *user.User, measurementId primitive.ObjectID) *user.User
 	AddImage(user *user.User, measurementId primitive.ObjectID, imageName string) *user.User
 	DeleteImage(user *user.User, measurementId, imageId primitive.ObjectID) *user.User
+	UpdateIsPublic(user *user.User, measurementId primitive.ObjectID) *user.User
 }
 
 func NewMeasurementService() IMeasurementService {
@@ -115,6 +116,24 @@ func (measurementService *MeasurementService) DeleteImage(user *user.User, measu
 		panic("Image not found")
 	}
 
+	measurement.Date.UpdateTime()
+	user.Date.UpdateTime()
+
+	return user
+
+}
+
+func (measurementService *MeasurementService) UpdateIsPublic(user *user.User, measurementId primitive.ObjectID) *user.User {
+
+	measurement := funk.Find(user.Measurements, func(measurement Measurement) bool {
+		return measurement.Id == measurementId
+	}).(*Measurement)
+
+	if measurement == nil {
+		panic("Measurement not found")
+	}
+
+	measurement.SetIsPublic(!measurement.IsPublic)
 	measurement.Date.UpdateTime()
 	user.Date.UpdateTime()
 
