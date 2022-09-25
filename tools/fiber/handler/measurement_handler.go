@@ -59,3 +59,54 @@ func CreateMeasurementHandler(c *fiber.Ctx) error {
 		Data:    nil,
 	})
 }
+
+func UpdateMeasurementHandler(c *fiber.Ctx) error {
+
+	measurementDto := new(dto.MeasurementRequest)
+
+	encodeError := json.Unmarshal(c.Body(), &measurementDto)
+	if encodeError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: constants.BAD_REQUEST,
+			Data:    nil,
+		})
+	}
+
+	validationError := measurementDto.Validate()
+	if validationError != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: constants.VALIDATION_ERROR,
+			Data:    validationError,
+		})
+	}
+
+	userId := c.Locals("userId").(primitive.ObjectID)
+	measurementDto.Id, _ = primitive.ObjectIDFromHex(c.Params("measurement_id"))
+
+	userObj, getUserErr := user.NewRepository().GetUserById(userId)
+	if getUserErr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: getUserErr.Error(),
+			Data:    nil,
+		})
+	}
+
+	userObj = measurement.NewMeasurementService().Update(*measurementDto, userObj)
+
+	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: upsertErr.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(dto.General{
+		Status:  true,
+		Message: constants.UPDATE_MEASUREMENT_SUCCESS,
+		Data:    nil,
+	})
+}

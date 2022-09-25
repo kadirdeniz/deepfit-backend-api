@@ -16,4 +16,5 @@ const (
 	VERIFICATION_CODE_RESENT     = "verification_code_resent"
 	PASSWORD_CHANGE_SUCCESS      = "password_change_success"
 	CREATE_MEASUREMENT_SUCCESS   = "create_measurement_success"
+	UPDATE_MEASUREMENT_SUCCESS   = "update_measurement_success"
 )

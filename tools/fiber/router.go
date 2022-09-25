@@ -27,6 +27,7 @@ func Router() {
 	measurement := api.Group(constants.MEASUREMENT)
 
 	measurement.Post(constants.EMPTY, middleware.TokenCanGo, handler.CreateMeasurementHandler)
+	measurement.Put(constants.EMPTY+constants.MEASUREMENT_ID, middleware.TokenCanGo, handler.UpdateMeasurementHandler)
 
 	log.Fatal(app.Listen(":" + configs.PORT))
 }

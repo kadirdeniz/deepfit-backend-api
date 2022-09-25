@@ -16,7 +16,8 @@ const (
 	VERIFICATION_CODE   = "/verification-code"
 	PASSWORD            = "/password"
 
-	MEASUREMENT = "/measurement"
+	MEASUREMENT    = "/measurement"
+	MEASUREMENT_ID = "/:measurement_id"
 
 	EMPTY = "/"
 )

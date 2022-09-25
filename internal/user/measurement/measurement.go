@@ -30,75 +30,73 @@ func NewMeasurement(dto dto.MeasurementRequest) *Measurement {
 		SetWaist(dto.Waist).
 		SetHip(dto.Hip).
 		SetHeight(dto.Height).
-		SetWeight(dto.Weight)
+		SetWeight(dto.Weight).
+		SetDate()
+
 }
 
 func (measurement *Measurement) SetId(id primitive.ObjectID) *Measurement {
 	measurement.Id = id
-	measurement.Date.UpdateTime()
 
 	return measurement
 }
 
 func (measurement *Measurement) SetRandomId() *Measurement {
 	measurement.Id = primitive.NewObjectID()
-	measurement.Date.UpdateTime()
 
 	return measurement
 }
 
 func (measurement *Measurement) SetArm(arm int) *Measurement {
 	measurement.Arm = arm
-	measurement.Date.UpdateTime()
 
 	return measurement
 }
 
 func (measurement *Measurement) SetLeg(leg int) *Measurement {
 	measurement.Leg = leg
-	measurement.Date.UpdateTime()
 
 	return measurement
 }
 
 func (measurement *Measurement) SetChest(chest int) *Measurement {
 	measurement.Chest = chest
-	measurement.Date.UpdateTime()
 
 	return measurement
 }
 
 func (measurement *Measurement) SetShoulder(shoulder int) *Measurement {
 	measurement.Shoulder = shoulder
-	measurement.Date.UpdateTime()
 
 	return measurement
 }
 
 func (measurement *Measurement) SetWaist(waist int) *Measurement {
 	measurement.Waist = waist
-	measurement.Date.UpdateTime()
 
 	return measurement
 }
 
 func (measurement *Measurement) SetHip(hip int) *Measurement {
 	measurement.Hip = hip
-	measurement.Date.UpdateTime()
 
 	return measurement
 }
 
 func (measurement *Measurement) SetHeight(height int) *Measurement {
 	measurement.Height = height
-	measurement.Date.UpdateTime()
 
 	return measurement
 }
 
 func (measurement *Measurement) SetWeight(weight int) *Measurement {
 	measurement.Weight = weight
-	measurement.Date.UpdateTime()
+
+	return measurement
+}
+
+func (measurement *Measurement) SetDate() *Measurement {
+	measurement.Date = *pkg.New()
 
 	return measurement
 }
