@@ -13,4 +13,6 @@ const (
 	INVALID_VERIFICATION_CODE   = "invalid_verification_code"
 	INVALID_PASSWORD            = "invalid_password"
 	PASSWORDS_NOT_MATCH         = "passwords_not_match"
+	EXCEEDED_MAX_VALUE          = "exceeded_max_value"
+	EXCEEDED_MIN_VALUE          = "exceeded_min_value"
 )

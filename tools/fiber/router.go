@@ -24,5 +24,9 @@ func Router() {
 	api.Put(constants.VERIFICATION_CODE, middleware.TokenCantGo, handler.ResendVerificationCodeHandler)
 	api.Put(constants.PASSWORD, middleware.TokenCantGo, handler.ChangePasswordHandler)
 
+	measurement := api.Group(constants.MEASUREMENT)
+
+	measurement.Post(constants.EMPTY, middleware.TokenCanGo, handler.CreateMeasurementHandler)
+
 	log.Fatal(app.Listen(":" + configs.PORT))
 }

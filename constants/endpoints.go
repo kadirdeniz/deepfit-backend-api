@@ -15,4 +15,8 @@ const (
 	COVER_PHOTO         = "/cover-photo"
 	VERIFICATION_CODE   = "/verification-code"
 	PASSWORD            = "/password"
+
+	MEASUREMENT = "/measurement"
+
+	EMPTY = "/"
 )
