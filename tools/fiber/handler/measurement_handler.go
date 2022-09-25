@@ -183,3 +183,35 @@ func AddImageToMeasurementHandler(c *fiber.Ctx) error {
 		Data:    nil,
 	})
 }
+
+func DeleteImageToMeasurementHandler(c *fiber.Ctx) error {
+
+	userId := c.Locals("userId").(primitive.ObjectID)
+	measurementId, _ := primitive.ObjectIDFromHex(c.Params("measurement_id"))
+	imageId, _ := primitive.ObjectIDFromHex(c.Params("image_id"))
+
+	userObj, getUserErr := user.NewRepository().GetUserById(userId)
+	if getUserErr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: getUserErr.Error(),
+			Data:    nil,
+		})
+	}
+
+	userObj = measurement.NewMeasurementService().DeleteImage(userObj, measurementId, imageId)
+
+	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: upsertErr.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(dto.General{
+		Status:  true,
+		Message: constants.DELETE_IMAGE_TO_MEASUREMENT_SUCCESS,
+		Data:    nil,
+	})
+}

@@ -19,6 +19,7 @@ const (
 	MEASUREMENT    = "/measurement"
 	MEASUREMENT_ID = "/:measurement_id"
 	IMAGE          = "/image"
+	IMAGE_ID       = "/:image_id"
 
 	EMPTY = "/"
 )

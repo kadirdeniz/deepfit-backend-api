@@ -29,7 +29,8 @@ func Router() {
 	measurement.Post(constants.EMPTY, middleware.TokenCanGo, handler.CreateMeasurementHandler)
 	measurement.Put(constants.EMPTY+constants.MEASUREMENT_ID, middleware.TokenCanGo, handler.UpdateMeasurementHandler)
 	measurement.Delete(constants.EMPTY+constants.MEASUREMENT_ID, middleware.TokenCanGo, handler.DeleteMeasurementHandler)
-	measurement.Post(constants.IMAGE+constants.MEASUREMENT_ID, middleware.TokenCanGo, handler.AddImageToMeasurementHandler)
+	measurement.Post(constants.MEASUREMENT_ID+constants.IMAGE, middleware.TokenCanGo, handler.AddImageToMeasurementHandler)
+	measurement.Delete(constants.MEASUREMENT_ID+constants.IMAGE+constants.IMAGE_ID, middleware.TokenCanGo, handler.DeleteImageToMeasurementHandler)
 
 	log.Fatal(app.Listen(":" + configs.PORT))
 }

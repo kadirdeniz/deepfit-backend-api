@@ -16,6 +16,7 @@ type IMeasurementService interface {
 	Update(dto dto.MeasurementRequest, user *user.User) *user.User
 	Delete(user *user.User, measurementId primitive.ObjectID) *user.User
 	AddImage(user *user.User, measurementId primitive.ObjectID, imageName string) *user.User
+	DeleteImage(user *user.User, measurementId, imageId primitive.ObjectID) *user.User
 }
 
 func NewMeasurementService() IMeasurementService {
@@ -89,6 +90,31 @@ func (measurementService *MeasurementService) AddImage(user *user.User, measurem
 	}
 
 	measurement.Images = append(measurement.Images, pkg.NewImage(imageName, constants.MEASUREMENT_IMAGE_PATH))
+	measurement.Date.UpdateTime()
+	user.Date.UpdateTime()
+
+	return user
+
+}
+
+func (measurementService *MeasurementService) DeleteImage(user *user.User, measurementId, imageId primitive.ObjectID) *user.User {
+
+	measurement := funk.Find(user.Measurements, func(measurement Measurement) bool {
+		return measurement.Id == measurementId
+	}).(*Measurement)
+
+	if measurement == nil {
+		panic("Measurement not found")
+	}
+
+	image := funk.Filter(measurement.Images, func(image pkg.Image) bool {
+		return image.Id == imageId
+	}).(*pkg.Image)
+
+	if image == nil {
+		panic("Image not found")
+	}
+
 	measurement.Date.UpdateTime()
 	user.Date.UpdateTime()
 
