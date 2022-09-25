@@ -110,3 +110,35 @@ func UpdateMeasurementHandler(c *fiber.Ctx) error {
 		Data:    nil,
 	})
 }
+
+func DeleteMeasurementHandler(c *fiber.Ctx) error {
+
+	userId := c.Locals("userId").(primitive.ObjectID)
+	measurementId, _ := primitive.ObjectIDFromHex(c.Params("measurement_id"))
+
+	userObj, getUserErr := user.NewRepository().GetUserById(userId)
+	if getUserErr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: getUserErr.Error(),
+			Data:    nil,
+		})
+	}
+
+	userObj = measurement.NewMeasurementService().Delete(userObj, measurementId)
+
+	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: upsertErr.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(dto.General{
+		Status:  true,
+		Message: constants.DELETE_MEASUREMENT_SUCCESS,
+		Data:    nil,
+	})
+
+}

@@ -28,6 +28,7 @@ func Router() {
 
 	measurement.Post(constants.EMPTY, middleware.TokenCanGo, handler.CreateMeasurementHandler)
 	measurement.Put(constants.EMPTY+constants.MEASUREMENT_ID, middleware.TokenCanGo, handler.UpdateMeasurementHandler)
+	measurement.Delete(constants.EMPTY+constants.MEASUREMENT_ID, middleware.TokenCanGo, handler.DeleteMeasurementHandler)
 
 	log.Fatal(app.Listen(":" + configs.PORT))
 }
