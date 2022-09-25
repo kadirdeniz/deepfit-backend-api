@@ -6,9 +6,7 @@ import (
 	"github.com/thoas/go-funk"
 )
 
-type MeasurementService struct {
-	repository IMeasurementRepository
-}
+type MeasurementService struct{}
 
 type IMeasurementService interface {
 	Create(dto dto.MeasurementRequest, user *user.User) *user.User
@@ -16,9 +14,7 @@ type IMeasurementService interface {
 }
 
 func NewMeasurementService() IMeasurementService {
-	return &MeasurementService{
-		repository: NewMeasurementRepository(),
-	}
+	return &MeasurementService{}
 }
 
 func (measurementService *MeasurementService) Create(dto dto.MeasurementRequest, user *user.User) *user.User {
