@@ -1,7 +1,9 @@
 package measurement
 
 import (
+	"deepfit/constants"
 	"deepfit/internal/user"
+	"deepfit/pkg"
 	"deepfit/pkg/dto"
 	"github.com/thoas/go-funk"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -13,6 +15,7 @@ type IMeasurementService interface {
 	Create(dto dto.MeasurementRequest, user *user.User) *user.User
 	Update(dto dto.MeasurementRequest, user *user.User) *user.User
 	Delete(user *user.User, measurementId primitive.ObjectID) *user.User
+	AddImage(user *user.User, measurementId primitive.ObjectID, imageName string) *user.User
 }
 
 func NewMeasurementService() IMeasurementService {
@@ -69,4 +72,26 @@ func (measurementService *MeasurementService) Delete(user *user.User, measuremen
 	user.Date.UpdateTime()
 
 	return user
+}
+
+func (measurementService *MeasurementService) AddImage(user *user.User, measurementId primitive.ObjectID, imageName string) *user.User {
+
+	measurement := funk.Find(user.Measurements, func(measurement Measurement) bool {
+		return measurement.Id == measurementId
+	}).(*Measurement)
+
+	if len(measurement.Images) >= 4 {
+		panic("Maximum number of images reached")
+	}
+
+	if measurement == nil {
+		panic("Measurement not found")
+	}
+
+	measurement.Images = append(measurement.Images, pkg.NewImage(imageName, constants.MEASUREMENT_IMAGE_PATH))
+	measurement.Date.UpdateTime()
+	user.Date.UpdateTime()
+
+	return user
+
 }

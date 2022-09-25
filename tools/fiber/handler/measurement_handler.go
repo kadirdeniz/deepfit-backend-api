@@ -4,6 +4,7 @@ import (
 	"deepfit/constants"
 	"deepfit/internal/user"
 	"deepfit/internal/user/measurement"
+	"deepfit/pkg"
 	"deepfit/pkg/dto"
 	"encoding/json"
 	"github.com/gofiber/fiber/v2"
@@ -141,4 +142,44 @@ func DeleteMeasurementHandler(c *fiber.Ctx) error {
 		Data:    nil,
 	})
 
+}
+
+func AddImageToMeasurementHandler(c *fiber.Ctx) error {
+
+	userId := c.Locals("userId").(primitive.ObjectID)
+	measurementId, _ := primitive.ObjectIDFromHex(c.Params("measurement_id"))
+
+	file, err := c.FormFile("image")
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: constants.BAD_REQUEST,
+			Data:    nil,
+		})
+	}
+
+	userObj, getUserErr := user.NewRepository().GetUserById(userId)
+	if getUserErr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: getUserErr.Error(),
+			Data:    nil,
+		})
+	}
+
+	userObj = measurement.NewMeasurementService().AddImage(userObj, measurementId, pkg.HashImageName(file.Filename))
+
+	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+			Status:  false,
+			Message: upsertErr.Error(),
+			Data:    nil,
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(dto.General{
+		Status:  true,
+		Message: constants.ADD_IMAGE_TO_MEASUREMENT_SUCCESS,
+		Data:    nil,
+	})
 }

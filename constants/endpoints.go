@@ -18,6 +18,7 @@ const (
 
 	MEASUREMENT    = "/measurement"
 	MEASUREMENT_ID = "/:measurement_id"
+	IMAGE          = "/image"
 
 	EMPTY = "/"
 )
