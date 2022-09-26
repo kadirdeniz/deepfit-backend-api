@@ -3,6 +3,7 @@ package handler
 import (
 	"deepfit/constants"
 	"deepfit/internal/user"
+	"deepfit/pkg"
 	"deepfit/pkg/dto"
 	"encoding/json"
 	"github.com/gofiber/fiber/v2"
@@ -14,7 +15,7 @@ func UpdateInterestsHandler(c *fiber.Ctx) error {
 
 	encodeError := json.Unmarshal(c.Body(), &updateInterestsDto)
 	if encodeError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
 			Status:  false,
 			Message: constants.BAD_REQUEST,
 			Data:    nil,
@@ -23,7 +24,7 @@ func UpdateInterestsHandler(c *fiber.Ctx) error {
 
 	validationError := updateInterestsDto.Validate()
 	if validationError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
 			Status:  false,
 			Message: constants.VALIDATION_ERROR,
 			Data:    validationError,
@@ -33,14 +34,14 @@ func UpdateInterestsHandler(c *fiber.Ctx) error {
 	userId := c.Locals("userId").(primitive.ObjectID)
 
 	if updateInterestsError := user.NewUserService().UpdateInterests(*updateInterestsDto, userId); updateInterestsError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
 			Status:  false,
 			Message: updateInterestsError.Error(),
 			Data:    nil,
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(dto.General{
+	return c.Status(fiber.StatusOK).JSON(pkg.Response{
 		Status:  true,
 		Message: constants.UPDATE_INTERESTS_SUCCESS,
 		Data:    nil,
@@ -53,7 +54,7 @@ func UpdateProfilePhotoHandler(c *fiber.Ctx) error {
 
 	photo, photoError := c.FormFile("profile_photo")
 	if photoError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
 			Status:  false,
 			Message: constants.BAD_REQUEST,
 			Data:    nil,
@@ -61,14 +62,14 @@ func UpdateProfilePhotoHandler(c *fiber.Ctx) error {
 	}
 
 	if updateProfilePhotoError := user.NewUserService().UpdateProfilePhoto(photo.Filename, userId); updateProfilePhotoError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
 			Status:  false,
 			Message: updateProfilePhotoError.Error(),
 			Data:    nil,
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(dto.General{
+	return c.Status(fiber.StatusOK).JSON(pkg.Response{
 		Status:  true,
 		Message: constants.UPDATE_PROFILE_PHOTO_SUCCESS,
 		Data:    nil,
@@ -80,7 +81,7 @@ func UpdateCoverPhotoHandler(c *fiber.Ctx) error {
 
 	photo, photoError := c.FormFile("cover_photo")
 	if photoError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
 			Status:  false,
 			Message: constants.BAD_REQUEST,
 			Data:    nil,
@@ -88,14 +89,14 @@ func UpdateCoverPhotoHandler(c *fiber.Ctx) error {
 	}
 
 	if updateCoverPhotoError := user.NewUserService().UpdateCoverPhoto(photo.Filename, userId); updateCoverPhotoError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(dto.General{
+		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
 			Status:  false,
 			Message: updateCoverPhotoError.Error(),
 			Data:    nil,
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(dto.General{
+	return c.Status(fiber.StatusOK).JSON(pkg.Response{
 		Status:  true,
 		Message: constants.UPDATE_COVER_PHOTO_SUCCESS,
 		Data:    nil,

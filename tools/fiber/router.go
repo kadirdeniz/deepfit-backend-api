@@ -8,13 +8,20 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 )
 
 func Router() {
-	app := fiber.New()
+
+	app := fiber.New(
+		fiber.Config{
+			ErrorHandler: handler.ErrorHandler,
+		},
+	)
+
+	app.Use(recover.New())
 
 	api := app.Group(constants.API_PREFIX)
-
 	api.Post(constants.REGISTER, middleware.TokenCantGo, handler.RegisterHandler)
 	api.Post(constants.LOGIN, middleware.TokenCantGo, handler.LoginHandler)
 	api.Post(constants.VERIFY_PHONE_NUMBER, middleware.TokenCanGo, handler.VerifyPhoneNumberHandler)
@@ -25,7 +32,6 @@ func Router() {
 	api.Put(constants.PASSWORD, middleware.TokenCantGo, handler.ChangePasswordHandler)
 
 	measurement := api.Group(constants.MEASUREMENT)
-
 	measurement.Post(constants.EMPTY, middleware.TokenCanGo, handler.CreateMeasurementHandler)
 	measurement.Put(constants.MEASUREMENT_ID, middleware.TokenCanGo, handler.UpdateMeasurementHandler)
 	measurement.Delete(constants.MEASUREMENT_ID, middleware.TokenCanGo, handler.DeleteMeasurementHandler)

@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"deepfit/constants"
-	"deepfit/pkg/dto"
+	"deepfit/pkg"
 	"deepfit/tools/jwt"
 	"strings"
 
@@ -13,7 +13,7 @@ func TokenCanGo(c *fiber.Ctx) error {
 
 	authorization := c.Get("Authorization")
 	if !strings.Contains(authorization, "Bearer ") {
-		return c.Status(fiber.StatusUnauthorized).JSON(dto.General{
+		return c.Status(fiber.StatusUnauthorized).JSON(pkg.Response{
 			Status:  false,
 			Message: constants.UNAUTHORIZED_USER,
 		})
@@ -21,7 +21,7 @@ func TokenCanGo(c *fiber.Ctx) error {
 
 	splittedAuthorization := strings.Split(authorization, " ")
 	if len(splittedAuthorization) != 2 {
-		return c.Status(fiber.StatusUnauthorized).JSON(dto.General{
+		return c.Status(fiber.StatusUnauthorized).JSON(pkg.Response{
 			Status:  false,
 			Message: constants.UNAUTHORIZED_USER,
 		})
@@ -42,7 +42,7 @@ func TokenCantGo(c *fiber.Ctx) error {
 	authorization := c.Get("Authorization")
 
 	if len(authorization) != 0 || authorization != "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(dto.General{
+		return c.Status(fiber.StatusUnauthorized).JSON(pkg.Response{
 			Status:  false,
 			Message: constants.AUTHORIZED_USER,
 		})
@@ -54,7 +54,7 @@ func TokenCantGo(c *fiber.Ctx) error {
 func VerifiedCanGo(c *fiber.Ctx) error {
 
 	if c.Locals("is_verified") == false {
-		return c.Status(fiber.StatusUnauthorized).JSON(dto.General{
+		return c.Status(fiber.StatusUnauthorized).JSON(pkg.Response{
 			Status:  false,
 			Message: constants.UNVERIFIED_USER,
 		})
@@ -66,7 +66,7 @@ func VerifiedCanGo(c *fiber.Ctx) error {
 func VerifiedCantGo(c *fiber.Ctx) error {
 
 	if c.Locals("is_verified") == true {
-		return c.Status(fiber.StatusUnauthorized).JSON(dto.General{
+		return c.Status(fiber.StatusUnauthorized).JSON(pkg.Response{
 			Status:  false,
 			Message: constants.VERIFIED_USER,
 		})
