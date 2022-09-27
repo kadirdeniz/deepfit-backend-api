@@ -7,14 +7,17 @@ var (
 )
 
 const (
+	AUTH                = "auth/"
 	REGISTER            = "/register"
 	LOGIN               = "/login"
 	VERIFY_PHONE_NUMBER = "/verify-phone-number"
-	INTERESTS           = "/interests"
-	PROFILE_PHOTO       = "/profile-photo"
-	COVER_PHOTO         = "/cover-photo"
-	VERIFICATION_CODE   = "/verification-code"
-	PASSWORD            = "/password"
+
+	USER              = "/user"
+	INTERESTS         = "/interests"
+	PROFILE_PHOTO     = "/profile-photo"
+	COVER_PHOTO       = "/cover-photo"
+	VERIFICATION_CODE = "/verification-code"
+	PASSWORD          = "/password"
 
 	MEASUREMENT    = "/measurement"
 	MEASUREMENT_ID = "/:measurement_id"

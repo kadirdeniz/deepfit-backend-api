@@ -1,26 +1,36 @@
 package handler
 
 import (
+	"deepfit/constants"
 	"deepfit/pkg"
 	"fmt"
+	validation "github.com/go-ozzo/ozzo-validation"
 	"github.com/gofiber/fiber/v2"
 )
 
 func ErrorHandler(ctx *fiber.Ctx, err error) error {
 
 	errObject, ok := err.(*pkg.Error)
-	if !ok {
-		fmt.Println("Error is not of type *pkg.Error")
-		return ctx.Status(500).JSON(
-			pkg.NewResponse(false, "Internal Server Error", nil),
-		)
+	if ok {
+		fmt.Println(errObject.ErrorInfo.Error())
+		return ctx.
+			Status(errObject.StatusCode).
+			JSON(
+				pkg.NewResponse(false, errObject.ErrorMessage, nil),
+			)
 	}
 
-	fmt.Println(errObject.ErrorLog)
+	validationErr, ok := err.(validation.InternalError)
+	if ok {
+		fmt.Println(validationErr.Error())
+		return ctx.
+			Status(fiber.StatusInternalServerError).
+			JSON(
+				pkg.NewResponse(false, constants.VALIDATION_ERROR, validationErr.InternalError()),
+			)
+	}
 
-	return ctx.Status(errObject.StatusCode).JSON(pkg.Response{
-		Status:  false,
-		Message: errObject.ErrorMessage,
-		Data:    nil,
-	})
+	return ctx.Status(500).JSON(
+		pkg.NewResponse(false, "Internal Server Error", nil),
+	)
 }

@@ -6,6 +6,7 @@ import (
 	"deepfit/pkg"
 	"deepfit/pkg/dto"
 	"deepfit/tools/jwt"
+	"deepfit/tools/ozzo_validation"
 	"encoding/json"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -14,6 +15,8 @@ import (
 func RegisterHandler(c *fiber.Ctx) error {
 
 	registerDto := new(dto.RegisterRequest)
+
+	ozzo_validation.Validate(registerDto)
 
 	encodeError := json.Unmarshal(c.Body(), &registerDto)
 	if encodeError != nil {

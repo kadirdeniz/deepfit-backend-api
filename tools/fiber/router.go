@@ -22,14 +22,18 @@ func Router() {
 	app.Use(recover.New())
 
 	api := app.Group(constants.API_PREFIX)
-	api.Post(constants.REGISTER, middleware.TokenCantGo, handler.RegisterHandler)
-	api.Post(constants.LOGIN, middleware.TokenCantGo, handler.LoginHandler)
-	api.Post(constants.VERIFY_PHONE_NUMBER, middleware.TokenCanGo, handler.VerifyPhoneNumberHandler)
-	api.Put(constants.INTERESTS, middleware.TokenCantGo, handler.UpdateInterestsHandler)
-	api.Put(constants.PROFILE_PHOTO, middleware.TokenCanGo, handler.UpdateProfilePhotoHandler)
-	api.Put(constants.COVER_PHOTO, middleware.TokenCanGo, handler.UpdateCoverPhotoHandler)
-	api.Put(constants.VERIFICATION_CODE, middleware.TokenCantGo, handler.ResendVerificationCodeHandler)
-	api.Put(constants.PASSWORD, middleware.TokenCantGo, handler.ChangePasswordHandler)
+
+	auth := api.Group(constants.AUTH)
+	auth.Post(constants.REGISTER, middleware.TokenCantGo, handler.RegisterHandler)
+	auth.Post(constants.LOGIN, middleware.TokenCantGo, handler.LoginHandler)
+	auth.Post(constants.VERIFY_PHONE_NUMBER, middleware.TokenCanGo, handler.VerifyPhoneNumberHandler)
+
+	user := api.Group(constants.USER)
+	user.Put(constants.INTERESTS, middleware.TokenCantGo, handler.UpdateInterestsHandler)
+	user.Put(constants.PROFILE_PHOTO, middleware.TokenCanGo, handler.UpdateProfilePhotoHandler)
+	user.Put(constants.COVER_PHOTO, middleware.TokenCanGo, handler.UpdateCoverPhotoHandler)
+	user.Put(constants.VERIFICATION_CODE, middleware.TokenCantGo, handler.ResendVerificationCodeHandler)
+	user.Put(constants.PASSWORD, middleware.TokenCantGo, handler.ChangePasswordHandler)
 
 	measurement := api.Group(constants.MEASUREMENT)
 	measurement.Post(constants.EMPTY, middleware.TokenCanGo, handler.CreateMeasurementHandler)
