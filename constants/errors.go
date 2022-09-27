@@ -8,6 +8,7 @@ const (
 	DATABASE_OPERATION_ERROR    = "database_operation_error"
 	EMAIL_ALREADY_EXISTS        = "email_already_exists"
 	USER_NOT_FOUND              = "user_not_found"
+	PHONE_NUMBER_NOT_FOUND      = "phone_number_not_found"
 	PHONE_NUMBER_ALREADY_EXISTS = "phone_number_already_exists"
 	NICKNAME_ALREADY_EXISTS     = "nickname_already_exists"
 	INVALID_VERIFICATION_CODE   = "invalid_verification_code"

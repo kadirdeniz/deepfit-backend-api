@@ -6,7 +6,6 @@ import (
 	"deepfit/internal/user/measurement"
 	"deepfit/pkg"
 	"deepfit/pkg/dto"
-	"encoding/json"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -15,79 +14,36 @@ func CreateMeasurementHandler(c *fiber.Ctx) error {
 
 	measurementDto := new(dto.MeasurementRequest)
 
-	encodeError := json.Unmarshal(c.Body(), &measurementDto)
-	if encodeError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.BAD_REQUEST,
-			Data:    nil,
-		})
-	}
-
-	validationError := measurementDto.Validate()
-	if validationError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.VALIDATION_ERROR,
-			Data:    validationError,
-		})
-	}
+	pkg.JSONEncoder(c.Body(), &measurementDto)
+	measurementDto.Validate()
 
 	userId := c.Locals("userId").(primitive.ObjectID)
 
-	userObj, getUserErr := user.NewRepository().GetUserById(userId)
-	if getUserErr != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: getUserErr.Error(),
-			Data:    nil,
-		})
-	}
+	repository := user.NewRepository()
+	userObj := repository.GetUserById(userId)
 
-	userObj.SetMeasurements(
-		measurement.NewMeasurementService().Create(userObj.Measurements, *measurementDto),
+	user.NewRepository().Upsert(
+		userObj.SetMeasurements(
+			measurement.NewMeasurementService().Create(userObj.Measurements, *measurementDto),
+		),
 	)
 
-	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: upsertErr.Error(),
-			Data:    nil,
-		})
-	}
-
-	return c.Status(fiber.StatusOK).JSON(pkg.Response{
-		Status:  true,
-		Message: constants.CREATE_MEASUREMENT_SUCCESS,
-		Data:    nil,
-	})
+	return c.Status(fiber.StatusOK).JSON(
+		pkg.NewResponse(true, constants.CREATE_MEASUREMENT_SUCCESS, nil),
+	)
 }
 
 func UpdateMeasurementHandler(c *fiber.Ctx) error {
 
 	measurementDto := new(dto.MeasurementRequest)
 
-	encodeError := json.Unmarshal(c.Body(), &measurementDto)
-	if encodeError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.BAD_REQUEST,
-			Data:    nil,
-		})
-	}
-
-	validationError := measurementDto.Validate()
-	if validationError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.VALIDATION_ERROR,
-			Data:    validationError,
-		})
-	}
+	pkg.JSONEncoder(c.Body(), &measurementDto)
+	measurementDto.Validate()
 
 	userId := c.Locals("userId").(primitive.ObjectID)
 	measurementDto.Id, _ = primitive.ObjectIDFromHex(c.Params("measurement_id"))
 
+	// TODO: Validate measurementDto
 	userObj, getUserErr := user.NewRepository().GetUserById(userId)
 	if getUserErr != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
@@ -97,23 +53,15 @@ func UpdateMeasurementHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj.SetMeasurements(
-		measurement.NewMeasurementService().Update(userObj.Measurements, *measurementDto),
+	user.NewRepository().Upsert(
+		userObj.SetMeasurements(
+			measurement.NewMeasurementService().Update(userObj.Measurements, *measurementDto),
+		),
 	)
 
-	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: upsertErr.Error(),
-			Data:    nil,
-		})
-	}
-
-	return c.Status(fiber.StatusOK).JSON(pkg.Response{
-		Status:  true,
-		Message: constants.UPDATE_MEASUREMENT_SUCCESS,
-		Data:    nil,
-	})
+	return c.Status(fiber.StatusOK).JSON(
+		pkg.NewResponse(true, constants.UPDATE_MEASUREMENT_SUCCESS, nil),
+	)
 }
 
 func DeleteMeasurementHandler(c *fiber.Ctx) error {
@@ -130,23 +78,15 @@ func DeleteMeasurementHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj.SetMeasurements(
-		measurement.NewMeasurementService().Delete(userObj.Measurements, measurementId),
+	user.NewRepository().Upsert(
+		userObj.SetMeasurements(
+			measurement.NewMeasurementService().Delete(userObj.Measurements, measurementId),
+		),
 	)
 
-	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: upsertErr.Error(),
-			Data:    nil,
-		})
-	}
-
-	return c.Status(fiber.StatusOK).JSON(pkg.Response{
-		Status:  true,
-		Message: constants.DELETE_MEASUREMENT_SUCCESS,
-		Data:    nil,
-	})
+	return c.Status(fiber.StatusOK).JSON(
+		pkg.NewResponse(true, constants.DELETE_MEASUREMENT_SUCCESS, nil),
+	)
 
 }
 
@@ -173,23 +113,16 @@ func AddImageToMeasurementHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj.SetMeasurements(
-		measurement.NewMeasurementService().AddImage(userObj.Measurements, measurementId, pkg.HashImageName(file.Filename)),
+	user.NewRepository().Upsert(
+		userObj.SetMeasurements(
+			measurement.NewMeasurementService().AddImage(userObj.Measurements, measurementId, pkg.HashImageName(file.Filename)),
+		),
 	)
 
-	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: upsertErr.Error(),
-			Data:    nil,
-		})
-	}
+	return c.Status(fiber.StatusOK).JSON(
+		pkg.NewResponse(true, constants.ADD_IMAGE_TO_MEASUREMENT_SUCCESS, nil),
+	)
 
-	return c.Status(fiber.StatusOK).JSON(pkg.Response{
-		Status:  true,
-		Message: constants.ADD_IMAGE_TO_MEASUREMENT_SUCCESS,
-		Data:    nil,
-	})
 }
 
 func DeleteImageToMeasurementHandler(c *fiber.Ctx) error {
@@ -207,23 +140,15 @@ func DeleteImageToMeasurementHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj.SetMeasurements(
-		measurement.NewMeasurementService().DeleteImage(userObj.Measurements, measurementId, imageId),
+	user.NewRepository().Upsert(
+		userObj.SetMeasurements(
+			measurement.NewMeasurementService().DeleteImage(userObj.Measurements, measurementId, imageId),
+		),
 	)
 
-	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: upsertErr.Error(),
-			Data:    nil,
-		})
-	}
-
-	return c.Status(fiber.StatusOK).JSON(pkg.Response{
-		Status:  true,
-		Message: constants.DELETE_IMAGE_TO_MEASUREMENT_SUCCESS,
-		Data:    nil,
-	})
+	return c.Status(fiber.StatusOK).JSON(
+		pkg.NewResponse(true, constants.DELETE_IMAGE_TO_MEASUREMENT_SUCCESS, nil),
+	)
 }
 
 func UpdateMeasurementIsPublicHandler(c *fiber.Ctx) error {
@@ -240,21 +165,13 @@ func UpdateMeasurementIsPublicHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj.SetMeasurements(
-		measurement.NewMeasurementService().UpdateIsPublic(userObj.Measurements, measurementId),
+	user.NewRepository().Upsert(
+		userObj.SetMeasurements(
+			measurement.NewMeasurementService().UpdateIsPublic(userObj.Measurements, measurementId),
+		),
 	)
 
-	if upsertErr := user.NewRepository().Upsert(userObj); upsertErr != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: upsertErr.Error(),
-			Data:    nil,
-		})
-	}
-
-	return c.Status(fiber.StatusOK).JSON(pkg.Response{
-		Status:  true,
-		Message: constants.UPDATE_MEASUREMENT_IS_PUBLIC_SUCCESS,
-		Data:    nil,
-	})
+	return c.Status(fiber.StatusOK).JSON(
+		pkg.NewResponse(true, constants.UPDATE_MEASUREMENT_IS_PUBLIC_SUCCESS, nil),
+	)
 }

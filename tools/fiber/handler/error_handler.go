@@ -12,7 +12,11 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 
 	errObject, ok := err.(*pkg.Error)
 	if ok {
-		fmt.Println(errObject.ErrorInfo.Error())
+
+		if errObject.ErrorInfo != nil {
+			fmt.Println(errObject.ErrorInfo.Error())
+		}
+
 		return ctx.
 			Status(errObject.StatusCode).
 			JSON(

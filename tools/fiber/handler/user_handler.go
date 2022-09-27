@@ -5,7 +5,6 @@ import (
 	"deepfit/internal/user"
 	"deepfit/pkg"
 	"deepfit/pkg/dto"
-	"encoding/json"
 	"github.com/gofiber/fiber/v2"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -13,23 +12,8 @@ import (
 func UpdateInterestsHandler(c *fiber.Ctx) error {
 	updateInterestsDto := new(dto.UpdateInterestRequest)
 
-	encodeError := json.Unmarshal(c.Body(), &updateInterestsDto)
-	if encodeError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.BAD_REQUEST,
-			Data:    nil,
-		})
-	}
-
-	validationError := updateInterestsDto.Validate()
-	if validationError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.VALIDATION_ERROR,
-			Data:    validationError,
-		})
-	}
+	pkg.JSONEncoder(c.Body(), &updateInterestsDto)
+	updateInterestsDto.Validate()
 
 	userId := c.Locals("userId").(primitive.ObjectID)
 
@@ -41,12 +25,9 @@ func UpdateInterestsHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(pkg.Response{
-		Status:  true,
-		Message: constants.UPDATE_INTERESTS_SUCCESS,
-		Data:    nil,
-	})
-
+	return c.Status(fiber.StatusOK).JSON(
+		pkg.NewResponse(true, constants.UPDATE_INTERESTS_SUCCESS, nil),
+	)
 }
 
 func UpdateProfilePhotoHandler(c *fiber.Ctx) error {
@@ -69,11 +50,9 @@ func UpdateProfilePhotoHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(pkg.Response{
-		Status:  true,
-		Message: constants.UPDATE_PROFILE_PHOTO_SUCCESS,
-		Data:    nil,
-	})
+	return c.Status(fiber.StatusOK).JSON(
+		pkg.NewResponse(true, constants.UPDATE_PROFILE_PHOTO_SUCCESS, nil),
+	)
 }
 
 func UpdateCoverPhotoHandler(c *fiber.Ctx) error {
@@ -96,9 +75,7 @@ func UpdateCoverPhotoHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusOK).JSON(pkg.Response{
-		Status:  true,
-		Message: constants.UPDATE_COVER_PHOTO_SUCCESS,
-		Data:    nil,
-	})
+	return c.Status(fiber.StatusOK).JSON(
+		pkg.NewResponse(true, constants.UPDATE_COVER_PHOTO_SUCCESS, nil),
+	)
 }

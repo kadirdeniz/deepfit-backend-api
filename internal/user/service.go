@@ -2,165 +2,78 @@ package user
 
 import (
 	"deepfit/constants"
+	"deepfit/pkg"
 	"deepfit/pkg/dto"
-	"errors"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-type UserService struct {
-	repository IUserRepository
-}
+type UserService struct{}
 
 type IUserService interface {
-	Register(dto dto.RegisterRequest) (*User, error)
-	Login(dto dto.LoginRequest) (*User, error)
-	VerifyPhoneNumber(dto dto.VerifyPhoneNumberRequest, userId primitive.ObjectID) (*User, error)
-	UpdateInterests(dto dto.UpdateInterestRequest, userId primitive.ObjectID) error
-	UpdateProfilePhoto(imageName string, userId primitive.ObjectID) error
-	UpdateCoverPhoto(imageName string, userId primitive.ObjectID) error
-	ResendVerificationCode(id primitive.ObjectID) (*User, error)
-	ChangePassword(dto dto.ChangePasswordRequest, userId primitive.ObjectID) (*User, error)
+	Register(dto dto.RegisterRequest) *User
+	Login(user *User, dto dto.LoginRequest) *User
+	VerifyPhoneNumber(user *User, dto dto.VerifyPhoneNumberRequest) *User
+	UpdateInterests(user *User, dto dto.UpdateInterestRequest) *User
+	UpdateProfilePhoto(user *User, imageName string) *User
+	UpdateCoverPhoto(user *User, imageName string) *User
+	ResendVerificationCode(user *User) *User
+	ChangePassword(user *User, dto dto.ChangePasswordRequest) *User
 }
 
 func NewUserService() IUserService {
-	return &UserService{
-		repository: NewRepository(),
-	}
+	return &UserService{}
 }
 
-func (userService *UserService) Register(dto dto.RegisterRequest) (*User, error) {
-
-	if !userService.repository.IsPhoneNumberExists(dto.Phone) {
-		return nil, errors.New(constants.PHONE_NUMBER_ALREADY_EXISTS)
-	}
-
-	if !userService.repository.IsNicknameExists(dto.Nickname) {
-		return nil, errors.New(constants.NICKNAME_ALREADY_EXISTS)
-	}
-
-	user := NewUser(dto.Name, dto.Surname, dto.Nickname, dto.Phone, dto.Password)
-
-	if upsertError := userService.repository.Upsert(user); upsertError != nil {
-		return nil, upsertError
-	}
-
-	return user, nil
+func (userService *UserService) Register(dto dto.RegisterRequest) *User {
+	return NewUser(dto.Name, dto.Surname, dto.Nickname, dto.Phone, dto.Password)
 }
 
-func (userService *UserService) VerifyPhoneNumber(dto dto.VerifyPhoneNumberRequest, userId primitive.ObjectID) (*User, error) {
-
-	user, getUserErr := userService.repository.GetUserById(userId)
-	if getUserErr != nil {
-		return nil, getUserErr
-	}
+func (userService *UserService) VerifyPhoneNumber(user *User, dto dto.VerifyPhoneNumberRequest) *User {
 
 	if user.Phone.CheckVerificationCode(dto.VerificationCode) {
-		return nil, errors.New(constants.INVALID_VERIFICATION_CODE)
+		panic(pkg.NewError(constants.StatusBadRequest, constants.INVALID_VERIFICATION_CODE, nil))
 	}
 
 	user.Phone.SetVerify()
 
-	if upsertError := userService.repository.Upsert(user); upsertError != nil {
-		return nil, upsertError
-	}
-
-	return user, nil
+	return user
 }
 
-func (userService *UserService) UpdateInterests(dto dto.UpdateInterestRequest, userId primitive.ObjectID) error {
-
-	user, getUserErr := userService.repository.GetUserById(userId)
-	if getUserErr != nil {
-		return getUserErr
-	}
+func (userService *UserService) UpdateInterests(user *User, dto dto.UpdateInterestRequest) *User {
 
 	user.Interests = dto.Interests
 
-	if upsertError := userService.repository.Upsert(user); upsertError != nil {
-		return upsertError
-	}
-
-	return nil
+	return user
 }
 
-func (userService *UserService) UpdateProfilePhoto(imageName string, userId primitive.ObjectID) error {
-
-	user, getUserErr := userService.repository.GetUserById(userId)
-	if getUserErr != nil {
-		return getUserErr
-	}
-
-	user.SetProfilePhoto(imageName)
-
-	if upsertError := userService.repository.Upsert(user); upsertError != nil {
-		return upsertError
-	}
-
-	return nil
+func (userService *UserService) UpdateProfilePhoto(user *User, imageName string) *User {
+	return user.SetProfilePhoto(imageName)
 }
 
-func (userService *UserService) UpdateCoverPhoto(imageName string, userId primitive.ObjectID) error {
-
-	user, getUserErr := userService.repository.GetUserById(userId)
-	if getUserErr != nil {
-		return getUserErr
-	}
-
-	user.SetCoverPhoto(imageName)
-
-	if upsertError := userService.repository.Upsert(user); upsertError != nil {
-		return upsertError
-	}
-
-	return nil
+func (userService *UserService) UpdateCoverPhoto(user *User, imageName string) *User {
+	return user.SetCoverPhoto(imageName)
 }
 
-func (userService *UserService) Login(dto dto.LoginRequest) (*User, error) {
-
-	user, getUserErr := userService.repository.GetUserByPhone(dto.Phone)
-	if getUserErr != nil {
-		return nil, getUserErr
-	}
+func (userService *UserService) Login(user *User, dto dto.LoginRequest) *User {
 
 	if !user.ComparePasswords(dto.Password) {
-		return nil, errors.New(constants.INVALID_PASSWORD)
+		panic(pkg.NewError(constants.StatusBadRequest, constants.INVALID_PASSWORD, nil))
 	}
 
-	return user, nil
+	return user
 }
 
-func (userService *UserService) ResendVerificationCode(id primitive.ObjectID) (*User, error) {
-
-	user, getUserErr := userService.repository.GetUserById(id)
-	if getUserErr != nil {
-		return nil, getUserErr
-	}
-
+func (userService *UserService) ResendVerificationCode(user *User) *User {
 	user.Phone.SetVerificationCode()
-
-	if upsertError := userService.repository.Upsert(user); upsertError != nil {
-		return nil, upsertError
-	}
-
-	return user, nil
+	return user
 }
 
-func (userService *UserService) ChangePassword(dto dto.ChangePasswordRequest, userId primitive.ObjectID) (*User, error) {
-
-	user, getUserErr := userService.repository.GetUserById(userId)
-	if getUserErr != nil {
-		return nil, getUserErr
-	}
+func (userService *UserService) ChangePassword(user *User, dto dto.ChangePasswordRequest) *User {
 
 	if !user.ComparePasswords(dto.OldPassword) {
-		return nil, errors.New(constants.INVALID_PASSWORD)
+		panic(pkg.NewError(constants.StatusBadRequest, constants.INVALID_PASSWORD, nil))
 	}
 
 	user.HashPassword(dto.NewPassword)
 
-	if upsertError := userService.repository.Upsert(user); upsertError != nil {
-		return nil, upsertError
-	}
-
-	return user, nil
+	return user
 }

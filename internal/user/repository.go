@@ -3,21 +3,20 @@ package user
 import (
 	"deepfit/configs"
 	"deepfit/constants"
+	"deepfit/pkg"
 	"deepfit/tools/mongodb"
-	"errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
 )
 
 type UserRepository struct{}
 
 type IUserRepository interface {
-	Upsert(user *User) error
-	GetUserById(userId primitive.ObjectID) (*User, error)
-	GetUserByPhone(phone string) (*User, error)
+	Upsert(user *User)
+	GetUserById(userId primitive.ObjectID) *User
+	GetUserByPhone(phone string) *User
 	IsPhoneNumberExists(phone string) bool
 	IsNicknameExists(nickname string) bool
 	IsEmailExists(email string) bool
@@ -27,19 +26,18 @@ func NewRepository() IUserRepository {
 	return new(UserRepository)
 }
 
-func (repository *UserRepository) Upsert(user *User) error {
+func (repository *UserRepository) Upsert(user *User) {
 	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
 	opts := options.Update().SetUpsert(true)
 
 	if _, updateErr := userCollection.UpdateByID(mongodb.CTX, user.ID, bson.M{"$set": user}, opts); updateErr != nil {
-		log.Fatal(updateErr)
-		return errors.New(constants.DATABASE_OPERATION_ERROR)
+		panic(
+			pkg.NewError(constants.StatusInternalServerError, constants.DATABASE_OPERATION_ERROR, updateErr),
+		)
 	}
-
-	return nil
 }
 
-func (repository *UserRepository) GetUserById(userId primitive.ObjectID) (*User, error) {
+func (repository *UserRepository) GetUserById(userId primitive.ObjectID) *User {
 
 	var userObj User
 	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
@@ -48,18 +46,36 @@ func (repository *UserRepository) GetUserById(userId primitive.ObjectID) (*User,
 
 	if response.Err() != nil {
 		if response.Err() == mongo.ErrNoDocuments {
-			return nil, errors.New(constants.USER_NOT_FOUND)
+			panic(pkg.NewError(constants.StatusNotFound, constants.USER_NOT_FOUND, nil))
 		}
-		log.Fatal(response.Err())
-		return nil, errors.New(constants.DATABASE_OPERATION_ERROR)
+		panic(pkg.NewError(constants.StatusInternalServerError, constants.DATABASE_OPERATION_ERROR, response.Err()))
 	}
 
 	if err := response.Decode(&userObj); err != nil {
-		log.Fatal(err)
-		return nil, errors.New(constants.DATABASE_OPERATION_ERROR)
+		panic(pkg.NewError(constants.StatusInternalServerError, constants.DATABASE_OPERATION_ERROR, err))
 	}
 
-	return &userObj, nil
+	return &userObj
+}
+
+func (repository *UserRepository) GetUserByPhone(phone string) *User {
+	var userObj User
+	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
+
+	response := userCollection.FindOne(mongodb.CTX, bson.M{"user.phone.phone": phone})
+
+	if response.Err() != nil {
+		if response.Err() == mongo.ErrNoDocuments {
+			panic(pkg.NewError(constants.StatusNotFound, constants.PHONE_NUMBER_NOT_FOUND, nil))
+		}
+		panic(pkg.NewError(constants.StatusInternalServerError, constants.DATABASE_OPERATION_ERROR, response.Err()))
+	}
+
+	if err := response.Decode(&userObj); err != nil {
+		panic(pkg.NewError(constants.StatusInternalServerError, constants.DATABASE_OPERATION_ERROR, err))
+	}
+
+	return &userObj
 }
 
 func (repository *UserRepository) IsPhoneNumberExists(phone string) bool {
@@ -69,8 +85,7 @@ func (repository *UserRepository) IsPhoneNumberExists(phone string) bool {
 
 	count, err := userCollection.CountDocuments(mongodb.CTX, filter)
 	if err != nil {
-		log.Fatal(err)
-		panic(errors.New(constants.DATABASE_OPERATION_ERROR))
+		panic(pkg.NewError(constants.StatusNotFound, constants.DATABASE_OPERATION_ERROR, err))
 	}
 
 	return count > 0
@@ -83,8 +98,7 @@ func (repository *UserRepository) IsNicknameExists(nickname string) bool {
 
 	count, err := userCollection.CountDocuments(mongodb.CTX, filter)
 	if err != nil {
-		log.Fatal(err)
-		panic(errors.New(constants.DATABASE_OPERATION_ERROR))
+		panic(pkg.NewError(constants.StatusNotFound, constants.DATABASE_OPERATION_ERROR, err))
 	}
 
 	return count > 0
@@ -97,31 +111,8 @@ func (repository *UserRepository) IsEmailExists(email string) bool {
 
 	count, err := userCollection.CountDocuments(mongodb.CTX, filter)
 	if err != nil {
-		log.Fatal(err)
-		panic(errors.New(constants.DATABASE_OPERATION_ERROR))
+		panic(pkg.NewError(constants.StatusNotFound, constants.DATABASE_OPERATION_ERROR, err))
 	}
 
 	return count > 0
-}
-
-func (repository *UserRepository) GetUserByPhone(phone string) (*User, error) {
-	var userObj User
-	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
-
-	response := userCollection.FindOne(mongodb.CTX, bson.M{"user.phone.phone": phone})
-
-	if response.Err() != nil {
-		if response.Err() == mongo.ErrNoDocuments {
-			return nil, errors.New(constants.USER_NOT_FOUND)
-		}
-		log.Fatal(response.Err())
-		return nil, errors.New(constants.DATABASE_OPERATION_ERROR)
-	}
-
-	if err := response.Decode(&userObj); err != nil {
-		log.Fatal(err)
-		return nil, errors.New(constants.DATABASE_OPERATION_ERROR)
-	}
-
-	return &userObj, nil
 }
