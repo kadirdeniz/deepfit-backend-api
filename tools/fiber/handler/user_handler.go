@@ -17,13 +17,14 @@ func UpdateInterestsHandler(c *fiber.Ctx) error {
 
 	userId := c.Locals("userId").(primitive.ObjectID)
 
-	if updateInterestsError := user.NewUserService().UpdateInterests(*updateInterestsDto, userId); updateInterestsError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: updateInterestsError.Error(),
-			Data:    nil,
-		})
-	}
+	repository := user.NewRepository()
+
+	repository.Upsert(
+		user.NewUserService().UpdateInterests(
+			repository.GetUserById(userId),
+			*updateInterestsDto,
+		),
+	)
 
 	return c.Status(fiber.StatusOK).JSON(
 		pkg.NewResponse(true, constants.UPDATE_INTERESTS_SUCCESS, nil),
@@ -33,22 +34,14 @@ func UpdateInterestsHandler(c *fiber.Ctx) error {
 func UpdateProfilePhotoHandler(c *fiber.Ctx) error {
 	userId := c.Locals("userId").(primitive.ObjectID)
 
-	photo, photoError := c.FormFile("profile_photo")
-	if photoError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.BAD_REQUEST,
-			Data:    nil,
-		})
-	}
+	photo := ImageFileHandler(c, "profile_photo")
 
-	if updateProfilePhotoError := user.NewUserService().UpdateProfilePhoto(photo.Filename, userId); updateProfilePhotoError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: updateProfilePhotoError.Error(),
-			Data:    nil,
-		})
-	}
+	repository := user.NewRepository()
+	userObj := repository.GetUserById(userId)
+
+	repository.Upsert(
+		user.NewUserService().UpdateProfilePhoto(userObj, photo.Filename),
+	)
 
 	return c.Status(fiber.StatusOK).JSON(
 		pkg.NewResponse(true, constants.UPDATE_PROFILE_PHOTO_SUCCESS, nil),
@@ -58,22 +51,14 @@ func UpdateProfilePhotoHandler(c *fiber.Ctx) error {
 func UpdateCoverPhotoHandler(c *fiber.Ctx) error {
 	userId := c.Locals("userId").(primitive.ObjectID)
 
-	photo, photoError := c.FormFile("cover_photo")
-	if photoError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.BAD_REQUEST,
-			Data:    nil,
-		})
-	}
+	photo := ImageFileHandler(c, "cover_photo")
 
-	if updateCoverPhotoError := user.NewUserService().UpdateCoverPhoto(photo.Filename, userId); updateCoverPhotoError != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: updateCoverPhotoError.Error(),
-			Data:    nil,
-		})
-	}
+	repository := user.NewRepository()
+	userObj := repository.GetUserById(userId)
+
+	repository.Upsert(
+		user.NewUserService().UpdateCoverPhoto(userObj, photo.Filename),
+	)
 
 	return c.Status(fiber.StatusOK).JSON(
 		pkg.NewResponse(true, constants.UPDATE_COVER_PHOTO_SUCCESS, nil),

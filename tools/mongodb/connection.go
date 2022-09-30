@@ -12,6 +12,8 @@ import (
 var CTX = context.TODO()
 
 var MongoClient *mongo.Client
+var Database = MongoClient.Database(configs.MONGO_INITDB_DATABASE)
+var UserCollection = Database.Collection(configs.USER_COLLECTION)
 
 func CreateConnection() {
 	client, err := mongo.Connect(CTX, options.Client().ApplyURI(configs.MongoDBConnectionURI))

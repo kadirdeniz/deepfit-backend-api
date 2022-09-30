@@ -24,7 +24,10 @@ func CreateMeasurementHandler(c *fiber.Ctx) error {
 
 	user.NewRepository().Upsert(
 		userObj.SetMeasurements(
-			measurement.NewMeasurementService().Create(userObj.Measurements, *measurementDto),
+			measurement.NewMeasurementService().Create(
+				userObj.Measurements,
+				*measurementDto,
+			),
 		),
 	)
 
@@ -43,17 +46,10 @@ func UpdateMeasurementHandler(c *fiber.Ctx) error {
 	userId := c.Locals("userId").(primitive.ObjectID)
 	measurementDto.Id, _ = primitive.ObjectIDFromHex(c.Params("measurement_id"))
 
-	// TODO: Validate measurementDto
-	userObj, getUserErr := user.NewRepository().GetUserById(userId)
-	if getUserErr != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: getUserErr.Error(),
-			Data:    nil,
-		})
-	}
+	repository := user.NewRepository()
+	userObj := repository.GetUserById(userId)
 
-	user.NewRepository().Upsert(
+	repository.Upsert(
 		userObj.SetMeasurements(
 			measurement.NewMeasurementService().Update(userObj.Measurements, *measurementDto),
 		),
@@ -69,16 +65,10 @@ func DeleteMeasurementHandler(c *fiber.Ctx) error {
 	userId := c.Locals("userId").(primitive.ObjectID)
 	measurementId, _ := primitive.ObjectIDFromHex(c.Params("measurement_id"))
 
-	userObj, getUserErr := user.NewRepository().GetUserById(userId)
-	if getUserErr != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: getUserErr.Error(),
-			Data:    nil,
-		})
-	}
+	repository := user.NewRepository()
+	userObj := repository.GetUserById(userId)
 
-	user.NewRepository().Upsert(
+	repository.Upsert(
 		userObj.SetMeasurements(
 			measurement.NewMeasurementService().Delete(userObj.Measurements, measurementId),
 		),
@@ -104,16 +94,10 @@ func AddImageToMeasurementHandler(c *fiber.Ctx) error {
 		})
 	}
 
-	userObj, getUserErr := user.NewRepository().GetUserById(userId)
-	if getUserErr != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: getUserErr.Error(),
-			Data:    nil,
-		})
-	}
+	repository := user.NewRepository()
+	userObj := repository.GetUserById(userId)
 
-	user.NewRepository().Upsert(
+	repository.Upsert(
 		userObj.SetMeasurements(
 			measurement.NewMeasurementService().AddImage(userObj.Measurements, measurementId, pkg.HashImageName(file.Filename)),
 		),
@@ -131,16 +115,10 @@ func DeleteImageToMeasurementHandler(c *fiber.Ctx) error {
 	measurementId, _ := primitive.ObjectIDFromHex(c.Params("measurement_id"))
 	imageId, _ := primitive.ObjectIDFromHex(c.Params("image_id"))
 
-	userObj, getUserErr := user.NewRepository().GetUserById(userId)
-	if getUserErr != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: getUserErr.Error(),
-			Data:    nil,
-		})
-	}
+	repository := user.NewRepository()
+	userObj := repository.GetUserById(userId)
 
-	user.NewRepository().Upsert(
+	repository.Upsert(
 		userObj.SetMeasurements(
 			measurement.NewMeasurementService().DeleteImage(userObj.Measurements, measurementId, imageId),
 		),
@@ -156,16 +134,10 @@ func UpdateMeasurementIsPublicHandler(c *fiber.Ctx) error {
 	userId := c.Locals("userId").(primitive.ObjectID)
 	measurementId, _ := primitive.ObjectIDFromHex(c.Params("measurement_id"))
 
-	userObj, getUserErr := user.NewRepository().GetUserById(userId)
-	if getUserErr != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: getUserErr.Error(),
-			Data:    nil,
-		})
-	}
+	repository := user.NewRepository()
+	userObj := repository.GetUserById(userId)
 
-	user.NewRepository().Upsert(
+	repository.Upsert(
 		userObj.SetMeasurements(
 			measurement.NewMeasurementService().UpdateIsPublic(userObj.Measurements, measurementId),
 		),

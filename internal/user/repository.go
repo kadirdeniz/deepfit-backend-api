@@ -1,7 +1,6 @@
 package user
 
 import (
-	"deepfit/configs"
 	"deepfit/constants"
 	"deepfit/pkg"
 	"deepfit/tools/mongodb"
@@ -27,10 +26,9 @@ func NewRepository() IUserRepository {
 }
 
 func (repository *UserRepository) Upsert(user *User) {
-	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
 	opts := options.Update().SetUpsert(true)
 
-	if _, updateErr := userCollection.UpdateByID(mongodb.CTX, user.ID, bson.M{"$set": user}, opts); updateErr != nil {
+	if _, updateErr := mongodb.UserCollection.UpdateByID(mongodb.CTX, user.ID, bson.M{"$set": user}, opts); updateErr != nil {
 		panic(
 			pkg.NewError(constants.StatusInternalServerError, constants.DATABASE_OPERATION_ERROR, updateErr),
 		)
@@ -40,9 +38,8 @@ func (repository *UserRepository) Upsert(user *User) {
 func (repository *UserRepository) GetUserById(userId primitive.ObjectID) *User {
 
 	var userObj User
-	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
 
-	response := userCollection.FindOne(mongodb.CTX, bson.M{"_id": userId})
+	response := mongodb.UserCollection.FindOne(mongodb.CTX, bson.M{"_id": userId})
 
 	if response.Err() != nil {
 		if response.Err() == mongo.ErrNoDocuments {
@@ -60,9 +57,8 @@ func (repository *UserRepository) GetUserById(userId primitive.ObjectID) *User {
 
 func (repository *UserRepository) GetUserByPhone(phone string) *User {
 	var userObj User
-	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
 
-	response := userCollection.FindOne(mongodb.CTX, bson.M{"user.phone.phone": phone})
+	response := mongodb.UserCollection.FindOne(mongodb.CTX, bson.M{"user.phone.phone": phone})
 
 	if response.Err() != nil {
 		if response.Err() == mongo.ErrNoDocuments {
@@ -81,9 +77,7 @@ func (repository *UserRepository) GetUserByPhone(phone string) *User {
 func (repository *UserRepository) IsPhoneNumberExists(phone string) bool {
 	filter := bson.M{"user.phone.phone": phone}
 
-	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
-
-	count, err := userCollection.CountDocuments(mongodb.CTX, filter)
+	count, err := mongodb.UserCollection.CountDocuments(mongodb.CTX, filter)
 	if err != nil {
 		panic(pkg.NewError(constants.StatusNotFound, constants.DATABASE_OPERATION_ERROR, err))
 	}
@@ -94,9 +88,7 @@ func (repository *UserRepository) IsPhoneNumberExists(phone string) bool {
 func (repository *UserRepository) IsNicknameExists(nickname string) bool {
 	filter := bson.M{"user.nickname": nickname}
 
-	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
-
-	count, err := userCollection.CountDocuments(mongodb.CTX, filter)
+	count, err := mongodb.UserCollection.CountDocuments(mongodb.CTX, filter)
 	if err != nil {
 		panic(pkg.NewError(constants.StatusNotFound, constants.DATABASE_OPERATION_ERROR, err))
 	}
@@ -107,9 +99,7 @@ func (repository *UserRepository) IsNicknameExists(nickname string) bool {
 func (repository *UserRepository) IsEmailExists(email string) bool {
 	filter := bson.M{"user.email.email": email}
 
-	userCollection := mongodb.GetCollection(configs.USER_COLLECTION)
-
-	count, err := userCollection.CountDocuments(mongodb.CTX, filter)
+	count, err := mongodb.UserCollection.CountDocuments(mongodb.CTX, filter)
 	if err != nil {
 		panic(pkg.NewError(constants.StatusNotFound, constants.DATABASE_OPERATION_ERROR, err))
 	}

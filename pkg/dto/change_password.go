@@ -13,8 +13,8 @@ type ChangePasswordRequest struct {
 	ConfirmNewPassword string `json:"confirm_new_password"`
 }
 
-func (request *ChangePasswordRequest) Validate() error {
-	return validation.ValidateStruct(request,
+func (request *ChangePasswordRequest) Validate() {
+	err := validation.ValidateStruct(request,
 		validation.Field(&request.OldPassword, ozzo_validation.Password...),
 		validation.Field(&request.NewPassword, ozzo_validation.Password...),
 		validation.Field(&request.ConfirmNewPassword, ozzo_validation.Password...),
@@ -25,4 +25,10 @@ func (request *ChangePasswordRequest) Validate() error {
 			return nil
 		})),
 	)
+
+	if err != nil {
+		panic(
+			validation.NewInternalError(err),
+		)
+	}
 }

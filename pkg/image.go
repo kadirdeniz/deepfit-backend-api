@@ -6,10 +6,8 @@ import (
 )
 
 type Image struct {
-	Id        primitive.ObjectID `bson:"_id" json:"_id"`
-	Thumbnail string             `bson:"thumbnail" json:"thumbnail"`
-	Original  string             `bson:"original" json:"original"`
-	Large     string             `bson:"large" json:"large"`
+	Id   primitive.ObjectID `bson:"_id" json:"_id"`
+	Name string             `bson:"name" json:"name"`
 }
 
 func NewImage(imageName, path string) Image {
@@ -19,10 +17,8 @@ func NewImage(imageName, path string) Image {
 	}
 
 	return Image{
-		Id:        primitive.NewObjectID(),
-		Thumbnail: path + constants.THUMBNAIL + imageName,
-		Original:  path + constants.ORIGINAL + imageName,
-		Large:     path + constants.LARGE + imageName,
+		Id:   primitive.NewObjectID(),
+		Name: imageName,
 	}
 
 }
