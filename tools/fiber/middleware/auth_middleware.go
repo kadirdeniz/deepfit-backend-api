@@ -13,18 +13,12 @@ func TokenCanGo(c *fiber.Ctx) error {
 
 	authorization := c.Get("Authorization")
 	if !strings.Contains(authorization, "Bearer ") {
-		return c.Status(fiber.StatusUnauthorized).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.UNAUTHORIZED_USER,
-		})
+		panic(pkg.NewError(fiber.StatusUnauthorized, constants.UNAUTHORIZED_USER, nil))
 	}
 
 	splittedAuthorization := strings.Split(authorization, " ")
 	if len(splittedAuthorization) != 2 {
-		return c.Status(fiber.StatusUnauthorized).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.UNAUTHORIZED_USER,
-		})
+		panic(pkg.NewError(fiber.StatusUnauthorized, constants.UNAUTHORIZED_USER, nil))
 	}
 
 	token := splittedAuthorization[1]
@@ -42,10 +36,7 @@ func TokenCantGo(c *fiber.Ctx) error {
 	authorization := c.Get("Authorization")
 
 	if len(authorization) != 0 || authorization != "" {
-		return c.Status(fiber.StatusUnauthorized).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.AUTHORIZED_USER,
-		})
+		panic(pkg.NewError(fiber.StatusUnauthorized, constants.AUTHORIZED_USER, nil))
 	}
 
 	return c.Next()
@@ -54,10 +45,7 @@ func TokenCantGo(c *fiber.Ctx) error {
 func VerifiedCanGo(c *fiber.Ctx) error {
 
 	if c.Locals("is_verified") == false {
-		return c.Status(fiber.StatusUnauthorized).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.UNVERIFIED_USER,
-		})
+		panic(pkg.NewError(fiber.StatusUnauthorized, constants.UNVERIFIED_USER, nil))
 	}
 
 	return c.Next()
@@ -66,10 +54,7 @@ func VerifiedCanGo(c *fiber.Ctx) error {
 func VerifiedCantGo(c *fiber.Ctx) error {
 
 	if c.Locals("is_verified") == true {
-		return c.Status(fiber.StatusUnauthorized).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.VERIFIED_USER,
-		})
+		panic(pkg.NewError(fiber.StatusUnauthorized, constants.VERIFIED_USER, nil))
 	}
 
 	return c.Next()

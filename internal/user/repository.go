@@ -58,7 +58,7 @@ func (repository *UserRepository) GetUserById(userId primitive.ObjectID) *User {
 func (repository *UserRepository) GetUserByPhone(phone string) *User {
 	var userObj User
 
-	response := mongodb.UserCollection.FindOne(mongodb.CTX, bson.M{"user.phone.phone": phone})
+	response := mongodb.UserCollection.FindOne(mongodb.CTX, bson.M{"phone.phone": phone})
 
 	if response.Err() != nil {
 		if response.Err() == mongo.ErrNoDocuments {
@@ -75,33 +75,33 @@ func (repository *UserRepository) GetUserByPhone(phone string) *User {
 }
 
 func (repository *UserRepository) IsPhoneNumberExists(phone string) bool {
-	filter := bson.M{"user.phone.phone": phone}
+	filter := bson.M{"phone.phone": phone}
 
 	count, err := mongodb.UserCollection.CountDocuments(mongodb.CTX, filter)
 	if err != nil {
-		panic(pkg.NewError(constants.StatusNotFound, constants.DATABASE_OPERATION_ERROR, err))
+		panic(pkg.NewError(constants.StatusInternalServerError, constants.DATABASE_OPERATION_ERROR, err))
 	}
 
 	return count > 0
 }
 
 func (repository *UserRepository) IsNicknameExists(nickname string) bool {
-	filter := bson.M{"user.nickname": nickname}
+	filter := bson.M{"nickname": nickname}
 
 	count, err := mongodb.UserCollection.CountDocuments(mongodb.CTX, filter)
 	if err != nil {
-		panic(pkg.NewError(constants.StatusNotFound, constants.DATABASE_OPERATION_ERROR, err))
+		panic(pkg.NewError(constants.StatusInternalServerError, constants.DATABASE_OPERATION_ERROR, err))
 	}
 
 	return count > 0
 }
 
 func (repository *UserRepository) IsEmailExists(email string) bool {
-	filter := bson.M{"user.email.email": email}
+	filter := bson.M{"email.email": email}
 
 	count, err := mongodb.UserCollection.CountDocuments(mongodb.CTX, filter)
 	if err != nil {
-		panic(pkg.NewError(constants.StatusNotFound, constants.DATABASE_OPERATION_ERROR, err))
+		panic(pkg.NewError(constants.StatusInternalServerError, constants.DATABASE_OPERATION_ERROR, err))
 	}
 
 	return count > 0

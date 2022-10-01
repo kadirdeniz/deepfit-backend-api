@@ -34,7 +34,8 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 			)
 	}
 
-	return ctx.Status(500).JSON(
+	fmt.Println(err.Error())
+	return ctx.Status(fiber.StatusInternalServerError).JSON(
 		pkg.NewResponse(false, "Internal Server Error", nil),
 	)
 }

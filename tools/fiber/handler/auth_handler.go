@@ -41,7 +41,7 @@ func RegisterHandler(c *fiber.Ctx) error {
 			constants.REGISTER_SUCCESS,
 			dto.RegisterResponse{
 				Id:    user.ID,
-				Token: jwt.New().SetUserId(user.ID).CreateToken().GetToken(),
+				Token: jwt.New().SetIsVerified(false).SetUserId(user.ID).CreateToken().GetToken(),
 			},
 		),
 	)
@@ -65,7 +65,7 @@ func LoginHandler(c *fiber.Ctx) error {
 			constants.LOGIN_SUCCESS,
 			dto.RegisterResponse{
 				Id:    userObj.ID,
-				Token: jwt.New().SetUserId(userObj.ID).CreateToken().GetToken(),
+				Token: jwt.New().SetIsVerified(true).SetUserId(userObj.ID).CreateToken().GetToken(),
 			},
 		),
 	)
@@ -93,7 +93,7 @@ func VerifyPhoneNumberHandler(c *fiber.Ctx) error {
 			constants.PHONE_VERIFICATION_SUCCESS,
 			dto.RegisterResponse{
 				Id:    userObj.ID,
-				Token: jwt.New().SetUserId(userObj.ID).CreateToken().GetToken(),
+				Token: jwt.New().SetIsVerified(true).SetUserId(userObj.ID).CreateToken().GetToken(),
 			},
 		),
 	)
@@ -131,10 +131,8 @@ func ChangePasswordHandler(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusOK).JSON(
 		pkg.NewResponse(
 			true,
-			constants.PASSWORD_CHANGE_SUCCESS, dto.RegisterResponse{
-				Id:    userObj.ID,
-				Token: jwt.New().SetUserId(userObj.ID).CreateToken().GetToken(),
-			},
+			constants.PASSWORD_CHANGE_SUCCESS,
+			nil,
 		),
 	)
 }

@@ -12,10 +12,11 @@ import (
 var CTX = context.TODO()
 
 var MongoClient *mongo.Client
-var Database = MongoClient.Database(configs.MONGO_INITDB_DATABASE)
-var UserCollection = Database.Collection(configs.USER_COLLECTION)
+var Database *mongo.Database
+var UserCollection *mongo.Collection
 
 func CreateConnection() {
+
 	client, err := mongo.Connect(CTX, options.Client().ApplyURI(configs.MongoDBConnectionURI))
 	if err != nil {
 		panic(err)
@@ -24,6 +25,8 @@ func CreateConnection() {
 	ping(client)
 
 	MongoClient = client
+	Database = MongoClient.Database(configs.MONGO_INITDB_DATABASE)
+	UserCollection = Database.Collection(configs.USER_COLLECTION)
 
 	fmt.Println("Connected to MongoDB!")
 }
