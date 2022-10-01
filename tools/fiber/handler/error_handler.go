@@ -14,7 +14,7 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 	if ok {
 
 		if errObject.ErrorInfo != nil {
-			fmt.Println(errObject.ErrorInfo.Error())
+			fmt.Println(errObject.ErrorInfo)
 		}
 
 		return ctx.
@@ -26,7 +26,7 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 
 	validationErr, ok := err.(validation.InternalError)
 	if ok {
-		fmt.Println(validationErr.Error())
+		fmt.Println(validationErr)
 		return ctx.
 			Status(fiber.StatusInternalServerError).
 			JSON(
@@ -34,7 +34,7 @@ func ErrorHandler(ctx *fiber.Ctx, err error) error {
 			)
 	}
 
-	fmt.Println(err.Error())
+	fmt.Println(err)
 	return ctx.Status(fiber.StatusInternalServerError).JSON(
 		pkg.NewResponse(false, "Internal Server Error", nil),
 	)

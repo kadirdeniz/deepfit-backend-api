@@ -54,7 +54,6 @@ func UpdateMeasurementHandler(c *fiber.Ctx) error {
 			measurement.NewMeasurementService().Update(userObj.Measurements, *measurementDto),
 		),
 	)
-
 	return c.Status(fiber.StatusOK).JSON(
 		pkg.NewResponse(true, constants.UPDATE_MEASUREMENT_SUCCESS, nil),
 	)
@@ -85,28 +84,20 @@ func AddImageToMeasurementHandler(c *fiber.Ctx) error {
 	userId := c.Locals("userId").(primitive.ObjectID)
 	measurementId, _ := primitive.ObjectIDFromHex(c.Params("measurement_id"))
 
-	file, err := c.FormFile("image")
-	if err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(pkg.Response{
-			Status:  false,
-			Message: constants.BAD_REQUEST,
-			Data:    nil,
-		})
-	}
+	photo := ImageFileHandler(c, "measurement_image")
 
 	repository := user.NewRepository()
 	userObj := repository.GetUserById(userId)
 
 	repository.Upsert(
 		userObj.SetMeasurements(
-			measurement.NewMeasurementService().AddImage(userObj.Measurements, measurementId, pkg.HashImageName(file.Filename)),
+			measurement.NewMeasurementService().AddImage(userObj.Measurements, measurementId, photo.Filename),
 		),
 	)
 
 	return c.Status(fiber.StatusOK).JSON(
 		pkg.NewResponse(true, constants.ADD_IMAGE_TO_MEASUREMENT_SUCCESS, nil),
 	)
-
 }
 
 func DeleteImageToMeasurementHandler(c *fiber.Ctx) error {

@@ -19,11 +19,11 @@ func New() *Date {
 }
 
 func (_time *Date) IsUpdated() bool {
-	return _time.UpdatedAt.IsZero()
+	return !_time.UpdatedAt.IsZero()
 }
 
 func (_time *Date) IsDeleted() bool {
-	return _time.DeletedAt.IsZero()
+	return !_time.DeletedAt.IsZero()
 }
 
 func (_time *Date) UpdateTime() {

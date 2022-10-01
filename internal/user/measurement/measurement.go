@@ -16,12 +16,13 @@ type Measurement struct {
 	Hip      int                `bson:"hip,omitempty" json:"hip"`
 	Height   int                `bson:"height,omitempty" json:"height"`
 	Weight   int                `bson:"weight,omitempty" json:"weight"`
-	IsPublic bool               `bson:"isPublic,omitempty" json:"isPublic"`
+	IsPublic bool               `bson:"is-public,omitempty" json:"is-public"`
 	Images   []pkg.Image        `bson:"images,omitempty" json:"images"`
 	Date     pkg.Date           `bson:"time" json:"time"`
 }
 
 func NewMeasurement(dto dto.MeasurementRequest) *Measurement {
+
 	return new(Measurement).
 		SetRandomId().
 		SetArm(dto.Arm).
@@ -105,6 +106,12 @@ func (measurement *Measurement) SetWeight(weight int) *Measurement {
 
 func (measurement *Measurement) SetDate() *Measurement {
 	measurement.Date = *pkg.New()
+
+	return measurement
+}
+
+func (measurement *Measurement) SetImages(images []pkg.Image) *Measurement {
+	measurement.Images = images
 
 	return measurement
 }

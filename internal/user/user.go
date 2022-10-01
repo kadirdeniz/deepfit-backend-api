@@ -8,18 +8,18 @@ import (
 )
 
 type User struct {
-	ID           primitive.ObjectID        `bson:"_id" json:"_id"`
-	Name         string                    `bson:"name" json:"name"`
-	Surname      string                    `bson:"surname" json:"surname"`
-	Nickname     string                    `bson:"nickname" json:"nickname"`
-	Phone        Phone                     `bson:"phone" json:"phone"`
-	Email        Email                     `bson:"email,omitempty" json:"email"`
-	Password     string                    `bson:"password" json:"password"`
-	Measurements []measurement.Measurement `bson:"measurements,omitempty" json:"measurements"`
-	Interests    []string                  `bson:"interests,omitempty" json:"interests"`
-	ProfilePhoto pkg.Image                 `bson:"profile_photo" json:"profile_photo"`
-	CoverPhoto   pkg.Image                 `bson:"cover_photo" json:"cover_photo"`
-	Date         pkg.Date                  `bson:"date" json:"date"`
+	ID           primitive.ObjectID         `bson:"_id" json:"_id"`
+	Name         string                     `bson:"name" json:"name"`
+	Surname      string                     `bson:"surname" json:"surname"`
+	Nickname     string                     `bson:"nickname" json:"nickname"`
+	Phone        Phone                      `bson:"phone" json:"phone"`
+	Email        Email                      `bson:"email,omitempty" json:"email"`
+	Password     string                     `bson:"password" json:"password"`
+	Measurements []*measurement.Measurement `bson:"measurements,omitempty" json:"measurements"`
+	Interests    []string                   `bson:"interests,omitempty" json:"interests"`
+	ProfilePhoto pkg.Image                  `bson:"profile_photo" json:"profile_photo"`
+	CoverPhoto   pkg.Image                  `bson:"cover_photo" json:"cover_photo"`
+	Date         pkg.Date                   `bson:"date" json:"date"`
 }
 
 func NewUser(name, surname, nickname, phone, password string) *User {
@@ -106,7 +106,7 @@ func (user *User) SetCoverPhoto(imageName string) *User {
 	return user
 }
 
-func (user *User) SetMeasurements(measurements []measurement.Measurement) *User {
+func (user *User) SetMeasurements(measurements []*measurement.Measurement) *User {
 	user.Measurements = measurements
 	return user
 }

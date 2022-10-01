@@ -17,4 +17,7 @@ const (
 	EXCEEDED_MAX_VALUE          = "exceeded_max_value"
 	EXCEEDED_MIN_VALUE          = "exceeded_min_value"
 	PHONE_ALREADY_VERIFIED      = "phone_already_verified"
+	MEASUREMENT_NOT_FOUND       = "measurement_not_found"
+	MAX_MEASUREMENT_IMAGE_COUNT = "max_measurement_image_count"
+	IMAGE_NOT_FOUND             = "image_not_found"
 )

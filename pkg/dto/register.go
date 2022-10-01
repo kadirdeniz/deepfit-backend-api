@@ -21,8 +21,8 @@ type RegisterRequest struct {
 	RePassword string `json:"re-password"`
 }
 
-func (request *RegisterRequest) Validate() error {
-	return validation.ValidateStruct(request,
+func (request *RegisterRequest) Validate() {
+	err := validation.ValidateStruct(request,
 		validation.Field(&request.Name, ozzo_validation.Name...),
 		validation.Field(&request.Surname, ozzo_validation.Name...),
 		validation.Field(&request.Nickname, ozzo_validation.Nickname...),
@@ -30,4 +30,9 @@ func (request *RegisterRequest) Validate() error {
 		validation.Field(&request.Password, ozzo_validation.Password...),
 		validation.Field(&request.RePassword, validation.In(request.Password).Error(constants.PASSWORD_DOESNT_MATCH)),
 	)
+	if err != nil {
+		panic(
+			validation.NewInternalError(err),
+		)
+	}
 }

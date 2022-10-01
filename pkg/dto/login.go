@@ -14,9 +14,15 @@ type LoginResponse struct {
 	Token string `json:"token"`
 }
 
-func (request *LoginRequest) Validate() error {
-	return validation.ValidateStruct(request,
+func (request *LoginRequest) Validate() {
+	err := validation.ValidateStruct(request,
 		validation.Field(&request.Phone, ozzo_validation.Phone...),
 		validation.Field(&request.Password, ozzo_validation.Password...),
 	)
+
+	if err != nil {
+		panic(
+			validation.NewInternalError(err),
+		)
+	}
 }

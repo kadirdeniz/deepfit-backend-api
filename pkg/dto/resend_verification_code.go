@@ -9,8 +9,14 @@ type ResendVerificationCodeRequest struct {
 	PhoneNumber string `json:"phone_number"`
 }
 
-func (request *ResendVerificationCodeRequest) Validate() error {
-	return validation.ValidateStruct(request,
+func (request *ResendVerificationCodeRequest) Validate() {
+	err := validation.ValidateStruct(request,
 		validation.Field(&request.PhoneNumber, ozzo_validation.Phone...),
 	)
+
+	if err != nil {
+		panic(
+			validation.NewInternalError(err),
+		)
+	}
 }

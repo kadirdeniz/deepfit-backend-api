@@ -16,10 +16,11 @@ type MeasurementRequest struct {
 	Hip      int                `json:"hip"`
 	Height   int                `json:"height"`
 	Weight   int                `json:"weight"`
+	IsPublic bool               `json:"is-public"`
 }
 
-func (request *MeasurementRequest) Validate() error {
-	return validation.ValidateStruct(request,
+func (request *MeasurementRequest) Validate() {
+	err := validation.ValidateStruct(request,
 		validation.Field(&request.Arm, ozzo_validation.Arm...),
 		validation.Field(&request.Chest, ozzo_validation.Chest...),
 		validation.Field(&request.Leg, ozzo_validation.Leg...),
@@ -29,4 +30,10 @@ func (request *MeasurementRequest) Validate() error {
 		validation.Field(&request.Weight, ozzo_validation.Weight...),
 		validation.Field(&request.Height, ozzo_validation.Height...),
 	)
+
+	if err != nil {
+		panic(
+			validation.NewInternalError(err),
+		)
+	}
 }

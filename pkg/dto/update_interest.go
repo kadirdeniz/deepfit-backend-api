@@ -9,8 +9,14 @@ type UpdateInterestRequest struct {
 	Interests []string `json:"interests"`
 }
 
-func (request *UpdateInterestRequest) Validate() error {
-	return validation.ValidateStruct(request,
+func (request *UpdateInterestRequest) Validate() {
+	err := validation.ValidateStruct(request,
 		validation.Field(&request.Interests, ozzo_validation.Interests...),
 	)
+
+	if err != nil {
+		panic(
+			validation.NewInternalError(err),
+		)
+	}
 }
