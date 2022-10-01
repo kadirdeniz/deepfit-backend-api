@@ -18,3 +18,4 @@
 .env
 .air.toml
 scripts/air.sh
+tmp

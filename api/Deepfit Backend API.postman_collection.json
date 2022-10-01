@@ -1,0 +1,589 @@
+{
+	"info": {
+		"_postman_id": "949aff9c-e102-4924-91e3-6ba3feb52740",
+		"name": "Deepfit Backend API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20060938"
+	},
+	"item": [
+		{
+			"name": "Register Flow",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"Kadir\",\n    \"surname\":\"Deniz\",\n    \"nickname\":\"kadirdeniz\",\n    \"phone\":\"+905061110089\",\n    \"password\":\"123456789\",\n    \"re-password\":\"123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Resend Verification Code",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOmZhbHNlLCJ1c2VySWQiOiI2MzM4MmZiYjk0YmI0MDFhNzZlZDdkMzQifQ.awELs1NVjTJ_VObnUrztglYedjEC4ZJnRqwjIcuHiYA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/user/verification-code",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"verification-code"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify Phone Number",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOnRydWUsInVzZXJJZCI6IjYzMzgzZGViNDg2ZGVkNWE3ZGFkYjg5NCJ9.NDCE4NDjgGxBK2Gz4tDHZ0VKGhevO9foJh2qF-r71-Y",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"verification_code\":78081\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/auth/verify-phone-number",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"verify-phone-number"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Interests",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOnRydWUsInVzZXJJZCI6IjYzMzgzZGViNDg2ZGVkNWE3ZGFkYjg5NCJ9.NDCE4NDjgGxBK2Gz4tDHZ0VKGhevO9foJh2qF-r71-Y",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"interests\":[\"kadir\",\"deniz\",\"deneme\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/user/interests",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"interests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile Picture",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOnRydWUsInVzZXJJZCI6IjYzMzgzZGViNDg2ZGVkNWE3ZGFkYjg5NCJ9.NDCE4NDjgGxBK2Gz4tDHZ0VKGhevO9foJh2qF-r71-Y",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profile_photo",
+									"type": "file",
+									"src": "/Users/kadirdeniz/Desktop/IMG_3944.heic"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/user/profile-photo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"profile-photo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cover Picture",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOnRydWUsInVzZXJJZCI6IjYzMzgzZGViNDg2ZGVkNWE3ZGFkYjg5NCJ9.NDCE4NDjgGxBK2Gz4tDHZ0VKGhevO9foJh2qF-r71-Y",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "cover_photo",
+									"type": "file",
+									"src": "/Users/kadirdeniz/Desktop/IMG_3944.heic"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/user/cover-photo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"cover-photo"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login Flow",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"phone\":\"+905061110089\",\n    \"password\":\"123456789\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Update Interests",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOnRydWUsInVzZXJJZCI6IjYzMzgzZGViNDg2ZGVkNWE3ZGFkYjg5NCJ9.NDCE4NDjgGxBK2Gz4tDHZ0VKGhevO9foJh2qF-r71-Y",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"interests\":[\"kadir\",\"deniz\",\"deneme\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/user/interests",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"interests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile Picture",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOnRydWUsInVzZXJJZCI6IjYzMzgzZGViNDg2ZGVkNWE3ZGFkYjg5NCJ9.NDCE4NDjgGxBK2Gz4tDHZ0VKGhevO9foJh2qF-r71-Y",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profile_photo",
+									"type": "file",
+									"src": "/Users/kadirdeniz/Desktop/IMG_3944.heic"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/user/profile-photo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"profile-photo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Cover Picture",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOnRydWUsInVzZXJJZCI6IjYzMzgzZGViNDg2ZGVkNWE3ZGFkYjg5NCJ9.NDCE4NDjgGxBK2Gz4tDHZ0VKGhevO9foJh2qF-r71-Y",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "cover_photo",
+									"type": "file",
+									"src": "/Users/kadirdeniz/Desktop/IMG_3944.heic"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/user/cover-photo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"user",
+								"cover-photo"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Measurement",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOnRydWUsInVzZXJJZCI6IjYzMzgzZGViNDg2ZGVkNWE3ZGFkYjg5NCJ9.NDCE4NDjgGxBK2Gz4tDHZ0VKGhevO9foJh2qF-r71-Y",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"arm\":35,\n    \"leg\":60,\n    \"shoulder\":90,\n    \"waist\":100,\n    \"hip\":100,\n    \"chest\":100,\n    \"height\":180,\n    \"weight\":100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/measurement/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"measurement",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOnRydWUsInVzZXJJZCI6IjYzMzgzZGViNDg2ZGVkNWE3ZGFkYjg5NCJ9.NDCE4NDjgGxBK2Gz4tDHZ0VKGhevO9foJh2qF-r71-Y",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"arm\":100,\n    \"leg\":100,\n    \"shoulder\":100,\n    \"waist\":100,\n    \"hip\":100,\n    \"chest\":100,\n    \"height\":100,\n    \"weight\":100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/measurement/63384560b5e0583248181952",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"measurement",
+								"63384560b5e0583248181952"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/api/v1/measurement/63384560b5e05832481819523",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"measurement",
+								"63384560b5e05832481819523"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Image",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOnRydWUsInVzZXJJZCI6IjYzMzgzZGViNDg2ZGVkNWE3ZGFkYjg5NCJ9.NDCE4NDjgGxBK2Gz4tDHZ0VKGhevO9foJh2qF-r71-Y",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "measurement_image",
+									"type": "file",
+									"src": "/Users/kadirdeniz/Desktop/IMG_3944.heic"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/api/v1/measurement/63384563b5e0583248181955/image",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"measurement",
+								"63384563b5e0583248181955",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Image",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOnRydWUsInVzZXJJZCI6IjYzMzgzZGViNDg2ZGVkNWE3ZGFkYjg5NCJ9.NDCE4NDjgGxBK2Gz4tDHZ0VKGhevO9foJh2qF-r71-Y",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/v1/measurement/63384563b5e0583248181955/image/63385755d3730bb648165e15-img_3944.heic",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"measurement",
+								"63384563b5e0583248181955",
+								"image",
+								"63385755d3730bb648165e15-img_3944.heic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Is Public",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOiIzNjAwIiwiaXNfdmVyaWZpZWQiOnRydWUsInVzZXJJZCI6IjYzMzgzZGViNDg2ZGVkNWE3ZGFkYjg5NCJ9.NDCE4NDjgGxBK2Gz4tDHZ0VKGhevO9foJh2qF-r71-Y",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8000/api/v1/measurement/63384563b5e0583248181955/is-public",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"measurement",
+								"63384563b5e0583248181955",
+								"is-public"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
