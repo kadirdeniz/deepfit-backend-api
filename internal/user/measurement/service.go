@@ -38,12 +38,6 @@ func getMeasurement(measurements []*Measurement, measurementId primitive.ObjectI
 	return measurementObj.(*Measurement)
 }
 
-func hasImage(measurement *Measurement, imageName string) bool {
-	return funk.Contains(measurement.Images, func(image pkg.Image) bool {
-		return image.GetImageName() == imageName
-	})
-}
-
 func (measurementService *MeasurementService) Create(measurements []*Measurement, dto dto.MeasurementRequest) []*Measurement {
 
 	measurement := NewMeasurement(dto)
@@ -94,7 +88,11 @@ func (measurementService *MeasurementService) AddImage(measurements []*Measureme
 func (measurementService *MeasurementService) DeleteImage(measurements []*Measurement, measurementId primitive.ObjectID, imageName string) []*Measurement {
 
 	measurement := getMeasurement(measurements, measurementId)
-	hasImage(measurement, imageName)
+	if isContains := funk.Contains(measurement.Images, func(image pkg.Image) bool {
+		return image.GetImageName() == imageName
+	}); !isContains {
+		panic(pkg.NewError(constants.StatusBadRequest, constants.IMAGE_NOT_FOUND, nil))
+	}
 
 	images := funk.Filter(measurement.Images, func(image pkg.Image) bool {
 		return image.GetImageName() != imageName
