@@ -17,5 +17,7 @@ func ImageFileHandler(c *fiber.Ctx, image_path string) *multipart.FileHeader {
 		)
 	}
 
+	photo.Filename = pkg.HashImageName(photo.Filename)
+
 	return photo
 }

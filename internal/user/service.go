@@ -29,6 +29,10 @@ func (userService *UserService) Register(dto dto.RegisterRequest) *User {
 
 func (userService *UserService) VerifyPhoneNumber(user *User, dto dto.VerifyPhoneNumberRequest) *User {
 
+	if user.Phone.IsVerified {
+		panic(pkg.NewError(constants.StatusBadRequest, constants.PHONE_ALREADY_VERIFIED, nil))
+	}
+
 	if !user.Phone.CheckVerificationCode(dto.VerificationCode) {
 		panic(pkg.NewError(constants.StatusBadRequest, constants.INVALID_VERIFICATION_CODE, nil))
 	}

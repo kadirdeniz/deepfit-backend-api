@@ -91,7 +91,7 @@ func (user *User) HashPassword(password string) *User {
 }
 
 func (user *User) ComparePasswords(password string) bool {
-	return bcrypt.ComparePasswords(user.Password, password)
+	return bcrypt.ComparePasswords(password, user.Password)
 }
 
 func (user *User) SetProfilePhoto(imageName string) *User {

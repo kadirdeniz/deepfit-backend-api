@@ -16,4 +16,5 @@ const (
 	PASSWORDS_NOT_MATCH         = "passwords_not_match"
 	EXCEEDED_MAX_VALUE          = "exceeded_max_value"
 	EXCEEDED_MIN_VALUE          = "exceeded_min_value"
+	PHONE_ALREADY_VERIFIED      = "phone_already_verified"
 )

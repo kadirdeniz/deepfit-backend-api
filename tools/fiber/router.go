@@ -29,7 +29,7 @@ func Router() {
 	auth.Post(constants.VERIFY_PHONE_NUMBER, middleware.TokenCanGo, middleware.VerifiedCantGo, handler.VerifyPhoneNumberHandler)
 
 	user := api.Group(constants.USER)
-	user.Put(constants.INTERESTS, middleware.TokenCantGo, middleware.VerifiedCanGo, handler.UpdateInterestsHandler)
+	user.Put(constants.INTERESTS, middleware.TokenCanGo, middleware.VerifiedCanGo, handler.UpdateInterestsHandler)
 	user.Put(constants.PROFILE_PHOTO, middleware.TokenCanGo, middleware.VerifiedCanGo, handler.UpdateProfilePhotoHandler)
 	user.Put(constants.COVER_PHOTO, middleware.TokenCanGo, middleware.VerifiedCanGo, handler.UpdateCoverPhotoHandler)
 	user.Get(constants.VERIFICATION_CODE, middleware.TokenCanGo, middleware.VerifiedCantGo, handler.ResendVerificationCodeHandler)
