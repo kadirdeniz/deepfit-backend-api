@@ -1,7 +1,6 @@
 package measurement
 
 import (
-	"deepfit/constants"
 	"deepfit/pkg"
 	"deepfit/pkg/dto"
 	"github.com/thoas/go-funk"
@@ -15,7 +14,7 @@ type IMeasurementService interface {
 	Update(measurements []Measurement, dto dto.MeasurementRequest) []Measurement
 	Delete(measurements []Measurement, measurementId primitive.ObjectID) []Measurement
 	AddImage(measurements []Measurement, measurementId primitive.ObjectID, imageName string) []Measurement
-	DeleteImage(measurements []Measurement, measurementId, imageId primitive.ObjectID) []Measurement
+	DeleteImage(measurements []Measurement, measurementId primitive.ObjectID, imageName string) []Measurement
 	UpdateIsPublic(measurements []Measurement, measurementId primitive.ObjectID) []Measurement
 }
 
@@ -86,13 +85,13 @@ func (measurementService *MeasurementService) AddImage(measurements []Measuremen
 		panic("Measurement not found")
 	}
 
-	measurement.Images = append(measurement.Images, pkg.NewImage(imageName, constants.MEASUREMENT_IMAGE_PATH))
+	measurement.Images = append(measurement.Images, pkg.NewImage(imageName))
 	measurement.Date.UpdateTime()
 
 	return measurements
 }
 
-func (measurementService *MeasurementService) DeleteImage(measurements []Measurement, measurementId, imageId primitive.ObjectID) []Measurement {
+func (measurementService *MeasurementService) DeleteImage(measurements []Measurement, measurementId primitive.ObjectID, imageName string) []Measurement {
 
 	measurement := funk.Find(measurements, func(measurement Measurement) bool {
 		return measurement.Id == measurementId
@@ -103,7 +102,7 @@ func (measurementService *MeasurementService) DeleteImage(measurements []Measure
 	}
 
 	image := funk.Filter(measurement.Images, func(image pkg.Image) bool {
-		return image.Id == imageId
+		return image.GetImageName() == imageName
 	}).(*pkg.Image)
 
 	if image == nil {

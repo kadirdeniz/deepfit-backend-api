@@ -113,14 +113,14 @@ func DeleteImageToMeasurementHandler(c *fiber.Ctx) error {
 
 	userId := c.Locals("userId").(primitive.ObjectID)
 	measurementId, _ := primitive.ObjectIDFromHex(c.Params("measurement_id"))
-	imageId, _ := primitive.ObjectIDFromHex(c.Params("image_id"))
+	imageName := c.Params("image_name")
 
 	repository := user.NewRepository()
 	userObj := repository.GetUserById(userId)
 
 	repository.Upsert(
 		userObj.SetMeasurements(
-			measurement.NewMeasurementService().DeleteImage(userObj.Measurements, measurementId, imageId),
+			measurement.NewMeasurementService().DeleteImage(userObj.Measurements, measurementId, imageName),
 		),
 	)
 

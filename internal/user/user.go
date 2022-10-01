@@ -1,7 +1,6 @@
 package user
 
 import (
-	"deepfit/constants"
 	"deepfit/internal/user/measurement"
 	"deepfit/pkg"
 	"deepfit/tools/bcrypt"
@@ -96,13 +95,13 @@ func (user *User) ComparePasswords(password string) bool {
 }
 
 func (user *User) SetProfilePhoto(imageName string) *User {
-	user.ProfilePhoto = pkg.NewImage(imageName, constants.PROFILE_PHOTO_PATH)
+	user.ProfilePhoto = pkg.NewImage(imageName)
 	user.Date.UpdateTime()
 	return user
 }
 
 func (user *User) SetCoverPhoto(imageName string) *User {
-	user.CoverPhoto = pkg.NewImage(imageName, constants.COVER_PHOTO_PATH)
+	user.CoverPhoto = pkg.NewImage(imageName)
 	user.Date.UpdateTime()
 	return user
 }

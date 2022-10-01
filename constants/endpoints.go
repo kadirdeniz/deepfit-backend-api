@@ -19,11 +19,11 @@ const (
 	VERIFICATION_CODE = "/verification-code"
 	PASSWORD          = "/password"
 
-	MEASUREMENT    = "/measurement"
-	MEASUREMENT_ID = "/:measurement_id"
-	IMAGE          = "/image"
-	IMAGE_ID       = "/:image_id"
-	IS_PUBLIC      = "/is-public"
+	MEASUREMENT          = "/measurement"
+	PARAM_MEASUREMENT_ID = "/:measurement_id"
+	IMAGE                = "/image"
+	PARAM_IMAGE_NAME     = "/:image_name"
+	IS_PUBLIC            = "/is-public"
 
 	EMPTY = "/"
 )
