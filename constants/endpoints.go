@@ -7,7 +7,7 @@ var (
 )
 
 const (
-	AUTH                = "auth/"
+	AUTH                = "/auth"
 	REGISTER            = "/register"
 	LOGIN               = "/login"
 	VERIFY_PHONE_NUMBER = "/verify-phone-number"

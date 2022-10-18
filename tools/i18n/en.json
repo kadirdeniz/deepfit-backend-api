@@ -1,0 +1,11 @@
+{
+  "user_not_found": "User not found",
+  "image_not_found": "Image not found",
+  "measurement_not_found": "Measurement not found",
+  "phone_already_verified": "Phone already verified",
+  "passwords_not_match": "Passwords not match",
+  "invalid_password": "Invalid password",
+  "invalid_verification_code": "Invalid verification code",
+  "nickname_already_exists": "Nickname already exists",
+  "phone_number_already_exists": "Phone number already exists"
+}

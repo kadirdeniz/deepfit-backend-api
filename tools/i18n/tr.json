@@ -1,0 +1,11 @@
+{
+  "user_not_found": "Kullanıcı bulunamadı",
+  "image_not_found": "Resim bulunamadı",
+  "measurement_not_found": "Ölçüm bulunamadı",
+  "phone_already_verified": "Telefon zaten doğrulandı",
+  "passwords_not_match": "Şifreler eşleşmiyor",
+  "invalid_password": "Geçersiz şifre",
+  "invalid_verification_code": "Geçersiz doğrulama kodu",
+  "nickname_already_exists": "Takma ad zaten var",
+  "phone_number_already_exists": "Telefon numarası zaten var"
+}
