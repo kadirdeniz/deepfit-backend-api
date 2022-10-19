@@ -10,7 +10,7 @@ type Date struct {
 	UpdatedAt time.Time `bson:"updated_at" json:"updated_at"`
 }
 
-func New() *Date {
+func NewDate() *Date {
 	return &Date{
 		CreatedAt: time.Now(),
 		DeletedAt: time.Time{},

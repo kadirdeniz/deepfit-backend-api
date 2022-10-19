@@ -105,7 +105,7 @@ func (measurement *Measurement) SetWeight(weight int) *Measurement {
 }
 
 func (measurement *Measurement) SetDate() *Measurement {
-	measurement.Date = *pkg.New()
+	measurement.Date = *pkg.NewDate()
 
 	return measurement
 }

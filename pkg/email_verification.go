@@ -1,6 +1,4 @@
-package user
-
-import "deepfit/pkg"
+package pkg
 
 type Email struct {
 	Email            string `bson:"email" json:"email"`
@@ -10,8 +8,8 @@ type Email struct {
 
 func NewEmail(email string) Email {
 	return Email{
-		Email:            pkg.LowerCaseReplaceEmpty(email),
-		VerificationCode: pkg.RandomCode(),
+		Email:            LowerCaseReplaceEmpty(email),
+		VerificationCode: RandomCode(),
 		IsVerified:       false,
 	}
 }
@@ -22,6 +20,6 @@ func (email *Email) SetVerify() *Email {
 }
 
 func (email *Email) SetVerificationCode() *Email {
-	email.VerificationCode = pkg.RandomCode()
+	email.VerificationCode = RandomCode()
 	return email
 }

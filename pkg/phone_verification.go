@@ -1,6 +1,4 @@
-package user
-
-import "deepfit/pkg"
+package pkg
 
 type Phone struct {
 	Phone            string `bson:"phone" json:"phone"`
@@ -11,7 +9,7 @@ type Phone struct {
 func NewPhone(phone string) Phone {
 	return Phone{
 		Phone:            phone,
-		VerificationCode: pkg.RandomCode(),
+		VerificationCode: RandomCode(),
 		IsVerified:       false,
 	}
 }
@@ -26,6 +24,6 @@ func (phone *Phone) CheckVerificationCode(verificationCode int) bool {
 }
 
 func (phone *Phone) SetVerificationCode() *Phone {
-	phone.VerificationCode = pkg.RandomCode()
+	phone.VerificationCode = RandomCode()
 	return phone
 }

@@ -12,8 +12,8 @@ type User struct {
 	Name         string                     `bson:"name" json:"name"`
 	Surname      string                     `bson:"surname" json:"surname"`
 	Nickname     string                     `bson:"nickname" json:"nickname"`
-	Phone        Phone                      `bson:"phone" json:"phone"`
-	Email        Email                      `bson:"email,omitempty" json:"email"`
+	Phone        pkg.Phone                  `bson:"phone" json:"phone"`
+	Email        pkg.Email                  `bson:"email,omitempty" json:"email"`
 	Password     string                     `bson:"password" json:"password"`
 	Measurements []*measurement.Measurement `bson:"measurements,omitempty" json:"measurements"`
 	Interests    []string                   `bson:"interests,omitempty" json:"interests"`
@@ -31,7 +31,9 @@ func NewUser(name, surname, nickname, phone, password string) *User {
 		SetPhoneObj(phone).
 		HashPassword(password).
 		SetProfilePhoto("").
-		SetCoverPhoto("")
+		SetCoverPhoto("").
+		SetNewDate()
+
 }
 
 func (user *User) SetId(id primitive.ObjectID) *User {
@@ -69,7 +71,7 @@ func (user *User) SetPhone(phone string) *User {
 }
 
 func (user *User) SetPhoneObj(phone string) *User {
-	user.Phone = NewPhone(phone)
+	user.Phone = pkg.NewPhone(phone)
 	return user
 }
 
@@ -80,7 +82,7 @@ func (user *User) SetEmail(email string) *User {
 }
 
 func (user *User) SetEmailObj(email string) *User {
-	user.Email = NewEmail(email)
+	user.Email = pkg.NewEmail(email)
 	return user
 }
 
@@ -108,5 +110,10 @@ func (user *User) SetCoverPhoto(imageName string) *User {
 
 func (user *User) SetMeasurements(measurements []*measurement.Measurement) *User {
 	user.Measurements = measurements
+	return user
+}
+
+func (user *User) SetNewDate() *User {
+	user.Date = *pkg.NewDate()
 	return user
 }
