@@ -19,6 +19,10 @@ func (email *Email) SetVerify() *Email {
 	return email
 }
 
+func (email *Email) CheckEmailVerificationCode(verificationCode int) bool {
+	return email.VerificationCode == verificationCode
+}
+
 func (email *Email) SetVerificationCode() *Email {
 	email.VerificationCode = RandomCode()
 	return email

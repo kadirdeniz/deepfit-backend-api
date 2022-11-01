@@ -7,6 +7,8 @@ const (
 	PASSWORD_DOESNT_MATCH       = "password_doesnt_match"
 	DATABASE_OPERATION_ERROR    = "database_operation_error"
 	EMAIL_ALREADY_EXISTS        = "email_already_exists"
+	EMAIL_NOT_FOUND             = "email_not_found"
+	EMAIL_ALREADY_VERIFIED      = "email_already_verified"
 	USER_NOT_FOUND              = "user_not_found"
 	PHONE_NUMBER_NOT_FOUND      = "phone_number_not_found"
 	PHONE_NUMBER_ALREADY_EXISTS = "phone_number_already_exists"

@@ -22,13 +22,13 @@ type User struct {
 	Date         pkg.Date                   `bson:"date" json:"date"`
 }
 
-func NewUser(name, surname, nickname, phone, password string) *User {
+func NewUser(name, surname, nickname, email, password string) *User {
 	return new(User).
 		SetRandomId().
 		SetName(name).
 		SetSurname(surname).
 		SetNickname(nickname).
-		SetPhoneObj(phone).
+		SetEmailObj(email).
 		HashPassword(password).
 		SetProfilePhoto("").
 		SetCoverPhoto("").

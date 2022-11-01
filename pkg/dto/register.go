@@ -16,7 +16,7 @@ type RegisterRequest struct {
 	Name       string `json:"name"`
 	Surname    string `json:"surname"`
 	Nickname   string `json:"nickname"`
-	Phone      string `json:"phone"`
+	Email      string `json:"email"`
 	Password   string `json:"password"`
 	RePassword string `json:"re-password"`
 }
@@ -26,7 +26,7 @@ func (request *RegisterRequest) Validate() {
 		validation.Field(&request.Name, ozzo_validation.Name...),
 		validation.Field(&request.Surname, ozzo_validation.Surname...),
 		validation.Field(&request.Nickname, ozzo_validation.Nickname...),
-		validation.Field(&request.Phone, ozzo_validation.Phone...),
+		validation.Field(&request.Email, ozzo_validation.Email...),
 		validation.Field(&request.Password, ozzo_validation.Password...),
 		validation.Field(&request.RePassword, validation.In(request.Password).Error(constants.PASSWORD_DOESNT_MATCH)),
 	)

@@ -19,7 +19,7 @@ func (phone *Phone) SetVerify() *Phone {
 	return phone
 }
 
-func (phone *Phone) CheckVerificationCode(verificationCode int) bool {
+func (phone *Phone) CheckPhoneVerificationCode(verificationCode int) bool {
 	return phone.VerificationCode == verificationCode
 }
 

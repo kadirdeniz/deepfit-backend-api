@@ -11,11 +11,13 @@ type UserService struct{}
 type IUserService interface {
 	Register(dto dto.RegisterRequest) *User
 	Login(user *User, dto dto.LoginRequest) *User
+	VerifyEmail(user *User, dto dto.VerifyEmailRequest) *User
 	VerifyPhoneNumber(user *User, dto dto.VerifyPhoneNumberRequest) *User
 	UpdateInterests(user *User, dto dto.UpdateInterestRequest) *User
 	UpdateProfilePhoto(user *User, imageName string) *User
 	UpdateCoverPhoto(user *User, imageName string) *User
-	ResendVerificationCode(user *User) *User
+	ResendPhoneVerificationCode(user *User) *User
+	ResendEmailVerificationCode(user *User) *User
 	ChangePassword(user *User, dto dto.ChangePasswordRequest) *User
 }
 
@@ -24,7 +26,22 @@ func NewUserService() IUserService {
 }
 
 func (userService *UserService) Register(dto dto.RegisterRequest) *User {
-	return NewUser(dto.Name, dto.Surname, dto.Nickname, dto.Phone, dto.Password)
+	return NewUser(dto.Name, dto.Surname, dto.Nickname, dto.Email, dto.Password)
+}
+
+func (userService *UserService) VerifyEmail(user *User, dto dto.VerifyEmailRequest) *User {
+
+	if user.Email.IsVerified {
+		panic(pkg.NewError(constants.StatusBadRequest, constants.EMAIL_ALREADY_VERIFIED, nil))
+	}
+
+	if !user.Email.CheckEmailVerificationCode(dto.VerificationCode) {
+		panic(pkg.NewError(constants.StatusBadRequest, constants.INVALID_VERIFICATION_CODE, nil))
+	}
+
+	user.Phone.SetVerify()
+
+	return user
 }
 
 func (userService *UserService) VerifyPhoneNumber(user *User, dto dto.VerifyPhoneNumberRequest) *User {
@@ -33,7 +50,7 @@ func (userService *UserService) VerifyPhoneNumber(user *User, dto dto.VerifyPhon
 		panic(pkg.NewError(constants.StatusBadRequest, constants.PHONE_ALREADY_VERIFIED, nil))
 	}
 
-	if !user.Phone.CheckVerificationCode(dto.VerificationCode) {
+	if !user.Phone.CheckPhoneVerificationCode(dto.VerificationCode) {
 		panic(pkg.NewError(constants.StatusBadRequest, constants.INVALID_VERIFICATION_CODE, nil))
 	}
 
@@ -66,8 +83,13 @@ func (userService *UserService) Login(user *User, dto dto.LoginRequest) *User {
 	return user
 }
 
-func (userService *UserService) ResendVerificationCode(user *User) *User {
+func (userService *UserService) ResendPhoneVerificationCode(user *User) *User {
 	user.Phone.SetVerificationCode()
+	return user
+}
+
+func (userService *UserService) ResendEmailVerificationCode(user *User) *User {
+	user.Email.SetVerificationCode()
 	return user
 }
 

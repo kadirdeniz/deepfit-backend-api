@@ -6,7 +6,7 @@ import (
 )
 
 type LoginRequest struct {
-	Phone    string `json:"phone"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
@@ -16,7 +16,7 @@ type LoginResponse struct {
 
 func (request *LoginRequest) Validate() {
 	err := validation.ValidateStruct(request,
-		validation.Field(&request.Phone, ozzo_validation.Phone...),
+		validation.Field(&request.Email, ozzo_validation.Email...),
 		validation.Field(&request.Password, ozzo_validation.Password...),
 	)
 
