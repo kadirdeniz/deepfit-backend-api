@@ -22,4 +22,5 @@ const (
 	ADD_IMAGE_TO_MEASUREMENT_SUCCESS     = "add_image_to_measurement_success"
 	DELETE_IMAGE_TO_MEASUREMENT_SUCCESS  = "delete_image_to_measurement_success"
 	UPDATE_MEASUREMENT_IS_PUBLIC_SUCCESS = "update_measurement_is_public_success"
+	FORGO_PASSWORD_EMAIL_SENT            = "forgot_password_email_sent"
 )

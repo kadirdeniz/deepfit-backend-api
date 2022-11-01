@@ -95,6 +95,28 @@ func VerifyEmailHandler(c *fiber.Ctx) error {
 	)
 }
 
+func ForgotPasswordHandler(c *fiber.Ctx) error {
+
+	forgotPasswordDto := new(dto.ForgotPasswordRequest)
+
+	pkg.JSONEncoder(c.Body(), &forgotPasswordDto)
+	forgotPasswordDto.Validate()
+
+	repository := user.NewRepository()
+	userObj := repository.GetUserByEmail(forgotPasswordDto.Email)
+	userObj = user.NewUserService().ResendEmailVerificationCode(userObj)
+	repository.Upsert(userObj)
+
+	return c.Status(fiber.StatusOK).JSON(
+		pkg.NewResponse(
+			true,
+			constants.FORGO_PASSWORD_EMAIL_SENT,
+			dto.RegisterResponse{
+				Token: jwt.New().SetIsVerified(false).SetUserId(userObj.ID).CreateToken().GetToken(),
+			}),
+	)
+}
+
 func VerifyPhoneNumberHandler(c *fiber.Ctx) error {
 
 	verifyDto := new(dto.VerifyPhoneNumberRequest)

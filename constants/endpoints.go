@@ -10,6 +10,7 @@ const (
 	AUTH                = "/auth"
 	REGISTER            = "/register"
 	LOGIN               = "/login"
+	FORGOT_PASSWORD     = "/forgot-password"
 	VERIFY_PHONE_NUMBER = "/verify-phone-number"
 	VERIFY_EMAIL        = "/verify-email"
 

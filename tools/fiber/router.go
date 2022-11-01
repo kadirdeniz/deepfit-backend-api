@@ -26,6 +26,7 @@ func Router() {
 	auth := api.Group(constants.AUTH)
 	auth.Post(constants.REGISTER, middleware.TokenCantGo, handler.RegisterHandler)
 	auth.Post(constants.LOGIN, middleware.TokenCantGo, handler.LoginHandler)
+	auth.Post(constants.FORGOT_PASSWORD, middleware.TokenCantGo, handler.ForgotPasswordHandler)
 	auth.Post(constants.VERIFY_EMAIL, middleware.TokenCanGo, middleware.VerifiedCantGo, handler.VerifyEmailHandler)
 
 	user := api.Group(constants.USER)
